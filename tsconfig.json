@@ -27,6 +27,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+  "vueCompilerOptions": {
+    "plugins": [
+      "@vue/language-plugin-pug"
+    ]
+  },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
