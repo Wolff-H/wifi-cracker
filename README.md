@@ -14,3 +14,21 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+# Introduction
+
+## 环境需求
+
+JavaScript 运行时 Node.js。
+JavaScript 运行时 deno。用于执行工具脚本。
+Tauri 编译所需的环境。
+
+## 安装
+
+安装项目依赖 `npm install`
+安装 standalone vue-devtools `npm add -g @vue/devtools`
+
+## 运行
+
+启动 vue-devtools （需要在启动应用之前） `npx vue-devtools`
+开发模式下启动应用 `npm run tauri dev`
