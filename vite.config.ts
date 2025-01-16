@@ -6,7 +6,6 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import * as path from "node:path"
 import getLocalIP from "./utils/getLocalIP"
 import store_export_names from "./src/store-namelist.auto-imports"
-import VueDevTools from 'vite-plugin-vue-devtools'
 
 
 
@@ -60,7 +59,6 @@ export default defineConfig(async ({ command, mode }) => ({
         UnpluginVueComponents({
             resolvers: [ElementPlusResolver()],
         }),
-        VueDevTools(),
     ],
     css:
     {
