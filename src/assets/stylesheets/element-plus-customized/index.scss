@@ -1,0 +1,59 @@
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      "base": #fa8c16,    // =$primary
+    ),
+    'success': (
+      'base': #52c41a,    // =$green60
+    ),
+    'warning': (
+      'base': #ffa940,    // =$gold60
+    ),
+    'danger': (
+      'base': #ff4d4f,    // =$red50
+    ),
+    'error': (
+      'base': #ff4d4f,    // =$red50
+    ),
+    'info': (
+      'base': #999999,    // =$black40
+    ),
+  ),
+
+  $text-color: (
+    'primary': black,    // =$black100
+    'regular': #333333,    // =$black80
+    'secondary': #999999,    // =$black40
+    'placeholder': #bfbfbf,    // =$black25
+    'disabled': #bfbfbf,    // =$black25
+  ),
+
+  $border-color: (
+    'base': #d9d9d9,    // =$black15
+    'light': #e6e6e6,    // =$black10
+    'lighter': #f2f2f2,    // =$black05
+    'extra-light': #f7f7f7,    // =$black03
+  ),
+
+//   $background-color-base: #f7f7f7,
+
+  $menu: (
+    'border-color': #e6e6e6,
+  ),
+
+  $calendar: (
+    'selected-background-color': #f2f2f2,
+  ),
+
+  // heights //
+//   $radio-height: (
+//     'default': 32px,
+//   ),
+
+//   $input-height: (
+//     'default': 32px,
+//   ),
+
+);
+
+@use "element-plus/theme-chalk/src/index.scss" as *;

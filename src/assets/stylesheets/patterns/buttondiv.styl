@@ -1,0 +1,18 @@
+$pattern$buttondiv =
+    display inline-flex
+    position relative
+    justify-content center
+    align-items center
+
+    &::after
+        content ''
+        position absolute
+        // top 0px
+        // left 0px
+        width 100%
+        height 100%
+        flex-shrink 0
+        // pointer-events none
+
+    &:active::after
+        background-color $shadow10
