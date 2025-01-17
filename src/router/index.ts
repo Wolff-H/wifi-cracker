@@ -18,11 +18,14 @@ export const routes: RouteRecordRaw[] =
     },
     {
         path: '/home',
-        // redirect: '/home/front-page',
+        redirect: '/home/tasks',
         component: Views.Home,
         children:
         [
-
+            {
+                path: 'tasks',
+                component: Views.Home_Tasks,
+            },
         ],
     },
 ]

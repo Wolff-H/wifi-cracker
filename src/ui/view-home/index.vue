@@ -20,9 +20,11 @@
                 :class="{ 'o-active': store.navigation_at === 'device' }"
                 @click="store.navigation_at = 'device'"
             )
-                IconSignalOne.icon(size="16px")
+                IconReceiver.icon(size="16px")
                 .title
                     |设备
+    #main-view
+        router-view
 </template>
 
 
@@ -31,7 +33,7 @@
 import {
     ListTop as IconListTop,
     RadarTwo as IconRadarTwo,
-    SignalOne as IconSignalOne,
+    Receiver as IconReceiver,
 } from "@icon-park/vue-next"
 
 defineOptions({ name: 'view-home' })
@@ -46,6 +48,8 @@ defineOptions({ name: 'view-home' })
 $root = '#view-home'
 
 {$root}
+    display flex
+    flex-direction column
     height 100%
     width 100%
     #header
@@ -67,9 +71,11 @@ $root = '#view-home'
                 .icon
                     // 
                 .title
-                    margin-left 6px
-                    font-size 14px
+                    margin-left 8px
+                    font-size 16px
                 &.o-active
                     color $primary
-
+    #main-view
+        height 0px
+        flex-grow 1
 </style>
