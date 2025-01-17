@@ -12,10 +12,19 @@ export const routes: RouteRecordRaw[] =
         path: '/:pathMatch(.*)',
         component: Views.PageNotFound,
     },
-    // {
-    //     path: '/',
-    //     redirect: '/home',
-    // },
+    {
+        path: '/',
+        redirect: '/home',
+    },
+    {
+        path: '/home',
+        // redirect: '/home/front-page',
+        component: Views.Home,
+        children:
+        [
+
+        ],
+    },
 ]
 
 const router = createRouter({

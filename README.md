@@ -30,5 +30,5 @@ Tauri 编译所需的环境。
 
 ## 运行
 
-启动 vue-devtools （需要在启动应用之前） `npx vue-devtools`
+启动 vue-devtools （需要在启动应用之前，需要单开一个终端） `npx vue-devtools`
 开发模式下启动应用 `npm run tauri dev`
