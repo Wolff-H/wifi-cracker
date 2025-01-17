@@ -26,6 +26,14 @@ export const routes: RouteRecordRaw[] =
                 path: 'tasks',
                 component: Views.Home_Tasks,
             },
+            {
+                path: 'scan',
+                component: Views.Home_Scan,
+            },
+            {
+                path: 'device',
+                component: Views.Home_Device,
+            },
         ],
     },
 ]

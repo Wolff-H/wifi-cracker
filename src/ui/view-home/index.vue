@@ -37,6 +37,10 @@ import {
 } from "@icon-park/vue-next"
 
 defineOptions({ name: 'view-home' })
+
+watch(() => store.navigation_at, (new_val) => {
+    router.replace({ path: '/home/' + new_val })
+})
 </script>
 
 
