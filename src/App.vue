@@ -29,6 +29,7 @@ body
     overscroll-behavior-y contain
 
 #app
-    // 
+    width 100%
+    height 100%
 </style>
     
