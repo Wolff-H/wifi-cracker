@@ -5,7 +5,8 @@
             .title
                 |计算机
         .body
-            //- 
+            .normalized-info
+                |{{ computer_info }}
     .section.device-info
         .head
             .title
@@ -27,6 +28,10 @@
 import { Refresh as IconRefresh } from "@icon-park/vue-next"
 
 defineOptions({ name: 'view-device' })
+
+const computer_info = computed(() => {
+    return store_Device.computer_info
+})
 
 const device_info = computed(() => {
     return store_Device.device_info
@@ -80,6 +85,13 @@ $root = "#view-device"
                         margin-right 4px
         >.body
             padding 16px
+    >.section.computer-info
+        >.body
+            .normalized-info
+                white-space pre
+                font-size 12px
+                font-family consolas, monospace
+                user-select text
     >.section.device-info
         >.body
             .update-time

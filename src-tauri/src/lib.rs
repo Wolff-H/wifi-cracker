@@ -12,6 +12,7 @@ pub fn run() {
             greet,
             logic::get_device_info::get_device_info,
             logic::greet2::greet2,
+            logic::get_computer_info::get_computer_info,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

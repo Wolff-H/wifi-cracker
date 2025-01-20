@@ -39,6 +39,7 @@ fn get_wireless_info_linux() -> io::Result<String> {
         result.push_str(&line);
         result.push('\n');
     }
+
     Ok(result)
 }
 
@@ -51,6 +52,7 @@ fn get_wireless_info_windows() -> io::Result<String> {
         result.push_str(&line);
         result.push('\n');
     }
+
     Ok(result)
 }
 
@@ -63,5 +65,6 @@ fn get_wireless_info_macos() -> io::Result<String> {
         result.push_str(&line);
         result.push('\n');
     }
+
     Ok(result)
 }
