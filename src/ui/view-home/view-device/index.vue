@@ -11,13 +11,14 @@
             .title
                 |无线网卡
             .actions
-                .action.refresh
+                .action.refresh(@click="refreshDeviceInfo")
                     IconRefresh.icon(size="12px")
                     |刷新
         .body
             .update-time
+                |更新于 {{ device_info.time }}
             .normalized-info
-                |{{ store_Device.device_info }}
+                |{{ device_info.content }}
 </template>
 
 
@@ -26,6 +27,17 @@
 import { Refresh as IconRefresh } from "@icon-park/vue-next"
 
 defineOptions({ name: 'view-device' })
+
+const device_info = computed(() => {
+    return store_Device.device_info
+})
+
+function refreshDeviceInfo() {
+    invoke('get_device_info')
+        .then((response) => {
+            store_Device.device_info = response
+        })
+}
 </script>
 
 
@@ -70,6 +82,15 @@ $root = "#view-device"
             padding 16px
     >.section.device-info
         >.body
+            .update-time
+                display flex
+                align-items center
+                font-size 12px
+                color $black40
+                margin-bottom 8px
+                width fit-content
+                padding 4px 8px
+                background-color $black03
             .normalized-info
                 white-space pre
                 font-size 12px
