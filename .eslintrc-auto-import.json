@@ -81,6 +81,9 @@
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
-    "watchSyncEffect": true
+    "watchSyncEffect": true,
+    "invoke": true,
+    "store_device": true,
+    "store_Device": true
   }
 }

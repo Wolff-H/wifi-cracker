@@ -82,4 +82,5 @@ $root = '#view-home'
     #main-view
         height 0px
         flex-grow 1
+        overflow auto
 </style>

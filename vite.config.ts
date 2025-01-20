@@ -52,6 +52,12 @@ console.log('mode :', mode);
                         '@/main': store_export_names,
                     },
                     {
+                        '@tauri-apps/api/core':
+                        [
+                            'invoke',
+                        ],
+                    },
+                    {
                         '@/api.auto-imports':
                         [
                             ['default', 'API'],
