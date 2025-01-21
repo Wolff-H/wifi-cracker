@@ -1,6 +1,6 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
-// 任何根级导入都需要在 lib.rs 中定义，因为 lib.rs 是 crate 的根
+// 在 lib.rs 中定义根级导入，因为 lib.rs 是 crate 的根
 
 mod logic;
 
@@ -13,6 +13,7 @@ pub fn run() {
             logic::get_device_info::get_device_info,
             logic::greet2::greet2,
             logic::get_computer_info::get_computer_info,
+            logic::scan_wifi::scan_wifi,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

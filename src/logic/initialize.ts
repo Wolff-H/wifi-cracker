@@ -16,5 +16,11 @@ export default async function initialize()
         store_Device.device_info = response
     })
 
+    await invoke('scan_wifi').then((response) => {
+        console.log('scan_wifi :', response)
+
+        // store_Device.device_info = response
+    })
+
     console.log('initialized')
 }

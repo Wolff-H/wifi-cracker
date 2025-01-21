@@ -4494,6 +4494,7 @@ dependencies = [
  "chrono",
  "serde",
  "serde_json",
+ "shlex",
  "sysinfo",
  "tauri",
  "tauri-build",
