@@ -92,6 +92,8 @@ $root = "#view-device"
                 font-size 12px
                 font-family consolas, monospace
                 user-select text
+                background-color $black03
+                padding 8px
     >.section.device-info
         >.body
             .update-time
@@ -101,12 +103,14 @@ $root = "#view-device"
                 color $black40
                 margin-bottom 8px
                 width fit-content
-                padding 4px 8px
+                padding 8px
                 background-color $black03
             .normalized-info
                 white-space pre
                 font-size 12px
                 font-family consolas, monospace
                 user-select text
+                background-color $black03
+                padding 8px
 
 </style>
