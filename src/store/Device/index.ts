@@ -23,19 +23,56 @@ const useStore = defineStore('/Device', {
     }),
     getters:
     {
-        wlan_interfaces(state)
+        wlan_interfaces(state): WC.WlanCardInfo[]
         {
             const raw = state.device_info.content
-
-            const lines = raw.split('\n')
-            console.log('lines :', lines);
-
-            // const 
+            const regex = /Name\s+:.+?(?=Name\s+:|$)/gs
+            const matches = raw.matchAll(regex)
+            const wlan_card_info_fragments: string[] = []
             
-            return lines
+            for (const match of matches)
+            {
+                if (match[0])
+                {
+                    wlan_card_info_fragments.push(match[0]);
+                }
+            }
 
+            const cards = wlan_card_info_fragments.map((fragment) => {
+                const lines = fragment.split('\n').filter((line) => line.trim() !== '')
+                const pairs = lines.map((line) => {
+                    const [key, value] = line.split(':')
+                    return [key.trim(), value.trim()]
+                })
 
-            
+                const dict = Object.fromEntries(pairs)
+
+                // return [dict.Name, dict]
+
+                return dict as WC.WlanCardInfo
+            })
+
+            return cards
+
+            // const dict_card_info = Object.fromEntries(
+            //     wlan_card_info_fragments.map((fragment) => {
+            //         const lines = fragment.split('\n').filter((line) => line.trim() !== '')
+            //         const pairs = lines.map((line) => {
+            //             const [key, value] = line.split(':')
+            //             return [key.trim(), value.trim()]
+            //         })
+
+            //         const dict = Object.fromEntries(pairs)
+
+            //         return [dict.Name, dict]
+            //     })
+            // )
+
+            // return dict_card_info
+        },
+        dict_wlan_interfaces(): Record<string, WC.WlanCardInfo>
+        {
+            return Object.fromEntries(this.wlan_interfaces.map((card) => [card.Name, card]))
         },
     },
 })

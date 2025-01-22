@@ -5,7 +5,15 @@
             el-select(
                 v-model="selected_device"
                 placeholder="选择无线网卡设备"
+                title="执行扫描的无线网卡设备"
             )
+                el-option(
+                    v-for="card of store_Device.wlan_interfaces"
+                    :key="card.Name"
+                    :label="card.Name"
+                    :value="card.Name"
+                    :title="`${card.Description}  •  GUID=${card.GUID}`"
+                )
         .action.execution-mode
             el-radio-group(
                 v-model="execution_mode"
