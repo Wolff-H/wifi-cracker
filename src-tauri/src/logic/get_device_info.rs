@@ -1,9 +1,9 @@
-use std::process::Command;
-use std::io::{self, BufRead, BufReader};
 use std::env;
 use tauri::ipc::InvokeError;
 use chrono;
 use serde::Serialize;
+
+use crate::utils::run_command::run_command;
 
 #[derive(Serialize)]
 pub struct DeviceInfo {
@@ -30,41 +30,20 @@ pub fn get_device_info() -> Result<DeviceInfo, InvokeError> {
     Ok(device_info)
 }
 
-fn get_wireless_info_linux() -> io::Result<String> {
-    let output = Command::new("iwconfig").output()?;
-    let reader = BufReader::new(output.stdout.as_slice());
-    let mut result = String::new();
-    for line in reader.lines() {
-        let line = line?;
-        result.push_str(&line);
-        result.push('\n');
-    }
+fn get_wireless_info_linux() -> std::io::Result<String> {
+    let output = run_command("iwconfig")?;
 
-    Ok(result)
+    Ok(output)
 }
 
-fn get_wireless_info_windows() -> io::Result<String> {
-    let output = Command::new("netsh").arg("wlan").arg("show").arg("interfaces").output()?;
-    let reader = BufReader::new(output.stdout.as_slice());
-    let mut result = String::new();
-    for line in reader.lines() {
-        let line = line?;
-        result.push_str(&line);
-        result.push('\n');
-    }
+fn get_wireless_info_windows() -> std::io::Result<String> {
+    let output = run_command("netsh wlan show interfaces")?;
 
-    Ok(result)
+    Ok(output)
 }
 
-fn get_wireless_info_macos() -> io::Result<String> {
-    let output = Command::new("airport").arg("-I").output()?;
-    let reader = BufReader::new(output.stdout.as_slice());
-    let mut result = String::new();
-    for line in reader.lines() {
-        let line = line?;
-        result.push_str(&line);
-        result.push('\n');
-    }
+fn get_wireless_info_macos() -> std::io::Result<String> {
+    let output = run_command("airport -I")?;
 
-    Ok(result)
+    Ok(output)
 }

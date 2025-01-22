@@ -25,3 +25,14 @@ serde_json = "1"
 chrono = "0.4.39"
 sysinfo = "0.33.1"
 shlex = "1.3.0"
+
+[dependencies.windows]
+version = "0.59.0"
+features = [
+    "Win32_System",
+    "Win32_System_SystemServices",
+    "Win32_Globalization",
+]
+# "Win32_System_Threading",
+# "Win32_NetworkManagement",
+# "Win32_NetworkManagement_WiFi",

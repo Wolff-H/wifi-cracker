@@ -2,10 +2,13 @@
 
 // 在 lib.rs 中定义根级导入，因为 lib.rs 是 crate 的根
 
+mod utils;
 mod logic;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    logic::initialize::initialize();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
