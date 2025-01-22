@@ -29,6 +29,8 @@ fn scan_wifi_linux() -> io::Result<String> {
 fn scan_wifi_windows() -> io::Result<String> {
     let output = run_command("netsh wlan show networks mode=bssid")?;
 
+    print!("{}", output);
+
     Ok(output)
 }
 
@@ -38,26 +40,36 @@ fn scan_wifi_macos() -> io::Result<String> {
     Ok(output)
 }
 
-// fn call_command(command_str: &str) -> Result<Output, io::Error> {
-//     let command_tokens = command_str.split_whitespace().collect::<Vec<&str>>();
-//     let command_entry = command_tokens[0];
-//     let command_args = &command_tokens[1..];
-
-//     let output = Command::new(command_entry)
-//        .args(command_args)
-//        .output()?;
-
-//     Ok(output)
-// }
-
 /**
- * 执行命令行指令，返回纯文本的执行结果
+ * 执行命令行指令，返回纯文本的执行结果（自动依系统语言）
  */
-fn run_command(command_line: &str) -> Result<String, std::io::Error> {
+fn run_command_autolang(command_line: &str) -> Result<String, std::io::Error> {
     let mut args = Shlex::new(command_line);
     let mut command = Command::new(args.next().unwrap());
 
     command.args(args);
+
+    let output = command.output()?;
+    let reader = BufReader::new(output.stdout.as_slice());
+    let mut result = String::new();
+
+    for line in reader.lines() {
+        let line = line?;
+        result.push_str(&line);
+        result.push('\n');
+    }
+
+    Ok(result)
+}
+
+/**
+ * 执行命令行指令，返回纯文本的执行结果（强制使用英文）
+ */
+fn run_command(command_line: &str) -> Result<String, std::io::Error> {
+    let mut command = Command::new("powershell");
+    command
+        .arg("-Command")
+        .arg(format!("$OutputEncoding = [console]::OutputEncoding = [System.Text.Encoding]::UTF8; Set-Culture en-US; {}", command_line));
 
     let output = command.output()?;
     let reader = BufReader::new(output.stdout.as_slice());

@@ -55,7 +55,8 @@ $root = '#view-tasks'
         width 129px
         border-right 1px solid $black15
         >.actions
-            margin 8px 0px
+            display flex
+            margin 8px
         >.menu-item
             display flex
             height 32px

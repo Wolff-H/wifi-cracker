@@ -21,6 +21,23 @@ const useStore = defineStore('/Device', {
             content: '',
         },
     }),
+    getters:
+    {
+        wlan_interfaces(state)
+        {
+            const raw = state.device_info.content
+
+            const lines = raw.split('\n')
+            console.log('lines :', lines);
+
+            // const 
+            
+            return lines
+
+
+            
+        },
+    },
 })
 
 type _S =

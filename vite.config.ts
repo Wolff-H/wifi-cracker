@@ -46,6 +46,7 @@ console.log('mode :', mode);
                             'cloneShallow',
                             'router',
                             'route',
+                            'dayjs',
                         ],
                     },
                     {

@@ -4,3 +4,4 @@
 export * as _ from "lodash-es"
 export { clone as cloneShallow, cloneDeep as clone } from "lodash-es"
 export { default as router, route } from "@/router"
+export { default as dayjs } from "dayjs"
