@@ -8,7 +8,7 @@
                 title="执行扫描的无线网卡设备"
             )
                 el-option(
-                    v-for="card of store_Device.wlan_interfaces"
+                    v-for="card of store_Device.wlan_cards"
                     :key="card.Name"
                     :label="card.Name"
                     :value="card.Name"

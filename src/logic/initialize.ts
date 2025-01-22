@@ -16,7 +16,7 @@ export default async function initialize()
         store_Device.device_info = response
 
         // 默认选择第一个设备为扫描执行设备 //
-        store_Scan.selected_device = store_Device.wlan_interfaces[0].Name
+        store_Scan.selected_device = store_Device.wlan_cards[0].Name
     })
 
     await invoke('scan_wifi').then((response) => {
