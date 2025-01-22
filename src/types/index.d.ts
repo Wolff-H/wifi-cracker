@@ -11,6 +11,13 @@ declare namespace WC
     //     memory_number: number,
     //     memory_frequency: number,
     // }
+
+    interface Timestamped<T>
+    {
+        timestamp: number
+        data: T
+    }
+
     interface DeviceInfo
     {
         time: string
