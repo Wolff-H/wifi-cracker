@@ -17,9 +17,9 @@
                     |刷新
         .body
             .update-time
-                |更新于 {{ device_info.time }}
+                |更新于 {{ dayjs(device_info.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss') }}
             .normalized-info
-                |{{ device_info.content }}
+                |{{ device_info.data }}
 </template>
 
 
