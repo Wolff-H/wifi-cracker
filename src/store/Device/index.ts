@@ -31,6 +31,7 @@ const useStore = defineStore('/Device', {
             const cards = wlan_card_info_fragments.map((fragment) => {
                 const lines = fragment.split('\n').filter((line) => line.trim() !== '')
                 const pairs = lines.map((line) => {
+                console.log('line :', line);
                     const [key, value] = line.split(':')
                     return [key.trim(), value.trim()]
                 })

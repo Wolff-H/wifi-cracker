@@ -24,6 +24,7 @@
         el-button.action.refresh(
             v-if="execution_mode === ''"
             type="primary"
+            @click="scan"
         )
             IconRefresh.icon(size="14px" style="margin-right: 6px")
             |刷新
@@ -35,6 +36,7 @@
 
 
 <script setup lang="ts">
+import scanWifi from "@/logic/scan"
 import {
     Refresh as IconRefresh,
 } from "@icon-park/vue-next"
@@ -48,6 +50,11 @@ const update_time = ref<number>()
 const update_time_formatted = computed(() => {
     return update_time ? '-' : dayjs(update_time).format('YYYY-MM-DD HH:mm:ss')
 })
+
+function scan()
+{
+    scanWifi(selected_device.value)
+}
 </script>
 
 
