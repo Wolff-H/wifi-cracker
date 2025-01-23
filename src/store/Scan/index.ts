@@ -9,7 +9,7 @@ const useStore = defineStore('/Scan', {
         wifi_scan_result:
         {
             timestamp: 0,
-            data: {},
+            data: '',
         },
     }),
 })
@@ -18,7 +18,7 @@ type _S =
 {
     selected_device: string,
     execution_mode: '' | 'monitor' | 'profile'
-    wifi_scan_result: WC.TimestampedResponse<any>
+    wifi_scan_result: WC.TimestampedResponse<string>
 }
 
 

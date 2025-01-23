@@ -31,6 +31,9 @@
     .information
         .update-time
             |更新于 {{ update_time_formatted }}
+    .scan-result
+        pre
+            |{{ scan_result.data }}
 </template>
 
 
@@ -46,9 +49,14 @@ defineOptions({ name: 'view-scan' })
 const selected_device = toRef(store_Scan, 'selected_device')
 const execution_mode = toRef(store_Scan, 'execution_mode')
 
-const update_time = ref<number>()
+// const update_time = ref<number>()
+const scan_result = computed(() => {
+    return store_Scan.wifi_scan_result
+})
+
 const update_time_formatted = computed(() => {
-    return update_time ? '-' : dayjs(update_time).format('YYYY-MM-DD HH:mm:ss')
+    const update_time = scan_result.value.timestamp
+    return update_time ? dayjs(update_time).format('YYYY-MM-DD HH:mm:ss') : '-'
 })
 
 function scan()

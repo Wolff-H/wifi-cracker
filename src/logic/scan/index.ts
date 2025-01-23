@@ -8,5 +8,7 @@ export default async function scanWifi(wlan_card: string)
         wlan_card: wlan_card,
     }).then((response) => {
         console.log(response)
+
+        store_Scan.wifi_scan_result = response
     })
 }
