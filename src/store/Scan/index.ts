@@ -18,7 +18,7 @@ type _S =
 {
     selected_device: string,
     execution_mode: '' | 'monitor' | 'profile'
-    wifi_scan_result: WC.Timestamped<any>
+    wifi_scan_result: WC.TimestampedResponse<any>
 }
 
 

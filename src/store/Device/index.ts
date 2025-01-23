@@ -4,18 +4,18 @@ import { defineStore } from "pinia"
 
 const useStore = defineStore('/Device', {
     state: (): _S => ({
-        comptuer_info: '',
+        computer_info: '',
         device_info:
         {
-            time: '',
-            content: '',
+            timestamp: 0,
+            data: '',
         },
     }),
     getters:
     {
         wlan_cards(state): WC.WlanCardInfo[]
         {
-            const raw = state.device_info.content
+            const raw = state.device_info.data
             const regex = /Name\s+:.+?(?=Name\s+:|$)/gs
             const matches = raw.matchAll(regex)
             const wlan_card_info_fragments: string[] = []
@@ -28,18 +28,24 @@ const useStore = defineStore('/Device', {
                 }
             }
 
-            const cards = wlan_card_info_fragments.map((fragment) => {
+            const cards: WC.WlanCardInfo[] = []
+
+            for (const fragment of wlan_card_info_fragments)
+            {
                 const lines = fragment.split('\n').filter((line) => line.trim() !== '')
-                const pairs = lines.map((line) => {
-                console.log('line :', line);
+                const pairs: [string, string][] = []
+                
+                for (const line of lines)
+                {
                     const [key, value] = line.split(':')
-                    return [key.trim(), value.trim()]
-                })
-
-                const dict = Object.fromEntries(pairs)
-
-                return dict as WC.WlanCardInfo
-            })
+                    pairs.push([key.trim(), value.trim()])
+                    
+                    if (line.includes(': disconnected')) break
+                }
+                
+                const dict = Object.fromEntries(pairs) as unknown as WC.WlanCardInfo
+                cards.push(dict)
+            }
 
             return cards
         },
@@ -52,8 +58,8 @@ const useStore = defineStore('/Device', {
 
 type _S =
 {
-    comptuer_info: string,
-    device_info: WC.DeviceInfo
+    computer_info: string,
+    device_info: WC.TimestampedResponse<string>
 }
 
 

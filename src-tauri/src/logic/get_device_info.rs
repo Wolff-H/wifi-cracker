@@ -7,8 +7,8 @@ use crate::utils::run_command::run_command;
 
 #[derive(Serialize)]
 pub struct DeviceInfo {
-    time: String,
-    content: String,
+    timestamp: i64,
+    data: String,
 }
 
 #[tauri::command]
@@ -23,8 +23,8 @@ pub fn get_device_info() -> Result<DeviceInfo, InvokeError> {
     };
 
     let device_info = DeviceInfo {
-        time: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
-        content: content?,
+        timestamp: chrono::Local::now().with_timezone(&chrono::Utc).timestamp(), //.format("%Y-%m-%d %H:%M:%S").to_string(),
+        data: content?,
     };
 
     Ok(device_info)
