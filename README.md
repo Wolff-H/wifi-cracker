@@ -21,17 +21,21 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
 ## 环境需求
 
 JavaScript 运行时 Node.js。
+
 JavaScript 运行时 deno。用于执行工具脚本。
+
 Tauri 编译所需的环境。
 
 ## 安装
 
 安装项目依赖 `npm install`
+
 安装 standalone vue-devtools `npm add -g @vue/devtools`
 
 ## 运行
 
 启动 vue-devtools （需要在启动应用之前，需要单开一个终端） `npx vue-devtools`
+
 开发模式下启动应用 `npm run tauri dev`
 
 ## Roadmap
