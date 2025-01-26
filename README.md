@@ -52,3 +52,10 @@ Tauri 编译所需的环境。
 - [ ] Task scheduling.
 - [ ] WiFi cracking.
 - [ ] WiFi cracking output.
+
+## references
+
+- [The Rust Programming Language](https://kaisery.github.io/trpl-zh-cn/)
+- [Tauri](https://tauri.app/start/)
+- [crates.io](https://crates.io/)
+- [Windows-RS Docs](https://microsoft.github.io/windows-docs-rs/doc/windows/)
