@@ -85,7 +85,7 @@
     "invoke": true,
     "store_device": true,
     "store_Device": true,
-    "dayjs": true,
-    "store_Scan": true
+    "store_Scan": true,
+    "dayjs": true
   }
 }

@@ -9,7 +9,6 @@ pub fn get_computer_info() -> String {
 
     let os_info = format!(
         "    {} [{}]",
-        // sysinfo::System::name().unwrap_or_else(|| String::from("-")),
         sysinfo::System::long_os_version().unwrap_or_else(|| String::from("-")),
         sysinfo::System::os_version().unwrap_or_else(|| String::from("-")),
     );

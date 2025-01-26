@@ -1,73 +1,39 @@
-use std::process::Command;
-use std::io::{self, BufRead, BufReader};
 use std::env;
-use shlex::Shlex;
 use tauri::ipc::InvokeError;
+use crate::utils::{run_command::run_command, to_timestamped_data, TimestampedData};
 
 
 
-#[tauri::command]
-pub fn scan_wifi() -> Result<String, InvokeError> {
+#[tauri::command(rename_all = "snake_case")]
+pub fn scan_wifi(wlan_card: String) -> Result<TimestampedData<String>, InvokeError>{
     let os = env::consts::OS;
 
     let content = match os {
-        "linux" => scan_wifi_linux().map_err(|e| InvokeError::from(e.to_string())),
-        "windows" => scan_wifi_windows().map_err(|e| InvokeError::from(e.to_string())),
-        "macos" => scan_wifi_macos().map_err(|e| InvokeError::from(e.to_string())),
-        _ => Ok("Unsupported OS".to_string()),
+        "linux" => scan_wifi_linux(wlan_card).map_err(|e| InvokeError::from(e.to_string())),
+        "windows" => scan_wifi_windows(wlan_card).map_err(|e| InvokeError::from(e.to_string())),
+        "macos" => scan_wifi_macos(wlan_card).map_err(|e| InvokeError::from(e.to_string())),
+        _ => Ok(to_timestamped_data("Unsupported OS".to_string(), None)),
     };
 
     content
 }
 
-fn scan_wifi_linux() -> io::Result<String> {
+fn scan_wifi_linux(wlan_card: String) -> std::io::Result<TimestampedData<String>> {
     let output = run_command("iw wlan0 scan")?;
+    println!("wlan_card: {}", wlan_card);
 
-    Ok(output)
+    Ok(to_timestamped_data(output, None))
 }
 
-fn scan_wifi_windows() -> io::Result<String> {
-    let output = run_command("netsh wlan show networks mode=bssid")?;
+fn scan_wifi_windows(wlan_card: String) -> std::io::Result<TimestampedData<String>> {
+    let output = run_command(&format!("netsh wlan show networks mode=bssid interface=\"{}\"", wlan_card))?;
 
-    Ok(output)
+    Ok(to_timestamped_data(output, None))
 }
 
-fn scan_wifi_macos() -> io::Result<String> {
+fn scan_wifi_macos(wlan_card: String) -> std::io::Result<TimestampedData<String>> {
     let output = run_command("airport -S")?;
+    println!("wlan_card: {}", wlan_card);
 
-    Ok(output)
-}
-
-// fn call_command(command_str: &str) -> Result<Output, io::Error> {
-//     let command_tokens = command_str.split_whitespace().collect::<Vec<&str>>();
-//     let command_entry = command_tokens[0];
-//     let command_args = &command_tokens[1..];
-
-//     let output = Command::new(command_entry)
-//        .args(command_args)
-//        .output()?;
-
-//     Ok(output)
-// }
-
-/**
- * 执行命令行指令，返回纯文本的执行结果
- */
-fn run_command(command_line: &str) -> Result<String, std::io::Error> {
-    let mut args = Shlex::new(command_line);
-    let mut command = Command::new(args.next().unwrap());
-
-    command.args(args);
-
-    let output = command.output()?;
-    let reader = BufReader::new(output.stdout.as_slice());
-    let mut result = String::new();
-
-    for line in reader.lines() {
-        let line = line?;
-        result.push_str(&line);
-        result.push('\n');
-    }
-
-    Ok(result)
+    Ok(to_timestamped_data(output, None))
 }
