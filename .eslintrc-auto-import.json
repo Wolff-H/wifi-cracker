@@ -84,6 +84,8 @@
     "watchSyncEffect": true,
     "invoke": true,
     "store_device": true,
-    "store_Device": true
+    "store_Device": true,
+    "dayjs": true,
+    "store_Scan": true
   }
 }
