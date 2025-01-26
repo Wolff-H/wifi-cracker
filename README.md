@@ -16,6 +16,7 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
 
 # Introduction
+这个项目目标制作一个通过暴力枚举破解 WiFi 密码的 GUI 工具。
 
 ## 环境需求
 
@@ -32,3 +33,22 @@ Tauri 编译所需的环境。
 
 启动 vue-devtools （需要在启动应用之前，需要单开一个终端） `npx vue-devtools`
 开发模式下启动应用 `npm run tauri dev`
+
+## Roadmap
+
+- [x] Project setup.
+- [x] Base GUI.
+- [x] Support Windows. **In Progress**
+- [ ] Support macOS.
+- [ ] Support Linux.
+
+## Todos
+
+- [x] Project framework.
+- [x] Platform check.
+- [x] Device nifo.
+- [x] WiFi scan.
+- [ ] WiFi scan statistics.
+- [ ] Task scheduling.
+- [ ] WiFi cracking.
+- [ ] WiFi cracking output.
