@@ -1,3 +1,4 @@
+import { parseScanOutput } from "@/logic/scan"
 import { defineStore } from "pinia"
 
 
@@ -12,6 +13,13 @@ const useStore = defineStore('/Scan', {
             data: '',
         },
     }),
+    getters:
+    {
+        scanned_info(state)
+        {
+            return parseScanOutput(state.wifi_scan_result.data)
+        },
+    },
 })
 
 type _S =

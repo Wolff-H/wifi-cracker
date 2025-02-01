@@ -59,3 +59,4 @@ Tauri 编译所需的环境。
 - [Tauri](https://tauri.app/start/)
 - [crates.io](https://crates.io/)
 - [Windows-RS Docs](https://microsoft.github.io/windows-docs-rs/doc/windows/)
+- [Windows Wlan Commands API](https://learn.microsoft.com/zh-cn/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)#netsh-wlan-commands)
