@@ -66,7 +66,13 @@ export function parseScanOutput(scan_output: string): any {
                 }
                 else
                 {
-                    layer_ss.BSSs[current_checking_bss][key] = value
+                    // 特殊逻辑 //
+                    if (key === 'Signal')
+                        layer_ss.BSSs[current_checking_bss][key] = parseInt(value)
+                    else if (key === 'Channel')
+                        layer_ss.BSSs[current_checking_bss][key] = parseInt(value)
+                    else
+                        layer_ss.BSSs[current_checking_bss][key] = value
                 }
             }
             else

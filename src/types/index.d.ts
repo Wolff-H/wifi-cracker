@@ -36,16 +36,19 @@ declare namespace WC
     interface WlanSSInfo
     {
         '_SSID': string
+        'Network type': string
+        'Authentication': string
+        'Encryption': string
         'BSSs':
         {
             [BSS: string]:
             {
                 '_BSSID': string
-                'Signal': string
+                'Signal': number
                 'Radio type': string
                 'Band': string
-                'Channel': string
-                'Bss Load':
+                'Channel': number
+                'Bss Load'?:
                 {
                     'Connected Stations': string
                     'Channel Utilization': string
@@ -57,8 +60,5 @@ declare namespace WC
                 'Other rates (Mbps)': string
             }
         }
-        'Network type': string
-        'Authentication': string
-        'Encryption': string
     }
 }
