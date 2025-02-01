@@ -103,8 +103,8 @@ $root = "#view-device"
                 color $black40
                 margin-bottom 8px
                 width fit-content
-                padding 8px
-                background-color $black03
+                // padding 8px
+                // background-color $black03
             .normalized-info
                 white-space pre
                 font-size 12px
