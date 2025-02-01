@@ -12,7 +12,7 @@
                     :key="card.Name"
                     :label="card.Name"
                     :value="card.Name"
-                    :title="`${card.Description}  •  GUID=${card.GUID}`"
+                    :title="`${card.Description}  •  GUID: ${card.GUID}`"
                 )
         .action.execution-mode
             el-radio-group(
