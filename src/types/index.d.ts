@@ -33,4 +33,32 @@ declare namespace WC
         'Hosted network status'?: string
     }
 
+    interface WlanSSInfo
+    {
+        '_SSID': string
+        'BSSs':
+        {
+            [BSS: string]:
+            {
+                '_BSSID': string
+                'Signal': string
+                'Radio type': string
+                'Band': string
+                'Channel': string
+                'Bss Load':
+                {
+                    'Connected Stations': string
+                    'Channel Utilization': string
+                    'Medium Available Capacity': string
+                }
+                'QoS MSCS Supported': string
+                'QoS Map Supported': string
+                'Basic rates (Mbps)': string
+                'Other rates (Mbps)': string
+            }
+        }
+        'Network type': string
+        'Authentication': string
+        'Encryption': string
+    }
 }

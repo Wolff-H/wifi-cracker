@@ -38,7 +38,7 @@ export function parseScanOutput(scan_output: string): any {
 
         const layer_ss: Record<string, any> =
         {
-            _ss_name: ssid,
+            _SSID: ssid,
             BSSs: {} as any,
         }
 
@@ -50,7 +50,7 @@ export function parseScanOutput(scan_output: string): any {
             
             if (key.startsWith('BSSID '))
             {
-                if (!layer_ss.BSSs[value]) layer_ss.BSSs[value] = { _bss_id: value }
+                if (!layer_ss.BSSs[value]) layer_ss.BSSs[value] = { _BSSID: value }
                 current_checking_bss = value
 
             }
@@ -78,7 +78,7 @@ export function parseScanOutput(scan_output: string): any {
         composed[ssid] = layer_ss
     }
 
-    return composed
+    return composed as Record<string, WC.WlanCardInfo>
 }
 
 function parseLine(line: string)

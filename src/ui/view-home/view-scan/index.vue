@@ -32,8 +32,13 @@
         .update-time
             |更新于 {{ update_time_formatted }}
     .scan-result
-        pre
-            |{{ scan_result.data }}
+        //- pre
+        //-     |{{ scan_result.data }}
+        el-table(
+            :data="scanned_wifis"
+
+        )
+            el-table-column(prop="_SSID" label="SSID")
 </template>
 
 
@@ -52,6 +57,10 @@ const execution_mode = toRef(store_Scan, 'execution_mode')
 // const update_time = ref<number>()
 const scan_result = computed(() => {
     return store_Scan.wifi_scan_result
+})
+
+const scanned_wifis = computed(() => {
+   return Object.values(store_Scan.dict_scanned_wifis)
 })
 
 const update_time_formatted = computed(() => {

@@ -15,7 +15,7 @@ const useStore = defineStore('/Scan', {
     }),
     getters:
     {
-        scanned_info(state)
+        dict_scanned_wifis(state): Record<string, WC.WlanSSInfo>
         {
             return parseScanOutput(state.wifi_scan_result.data)
         },
