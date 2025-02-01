@@ -1,10 +1,10 @@
 export default async function scanWifi(wlan_card: string)
 {
+    console.log(`invoke('scan_wifi'`);
+    
     await invoke('scan_wifi', {
         wlan_card: wlan_card,
     }).then((response) => {
-        console.log(response)
-
         store_Scan.wifi_scan_result = response
     })
 }
@@ -52,7 +52,6 @@ export function parseScanOutput(scan_output: string): any {
             {
                 if (!layer_ss.BSSs[value]) layer_ss.BSSs[value] = { _BSSID: value }
                 current_checking_bss = value
-
             }
             else if (current_checking_bss)
             {
