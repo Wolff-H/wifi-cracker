@@ -20,7 +20,7 @@
             )
                 el-radio-button(label="手动" value="")
                 el-radio-button(label="监控" value="monitor")
-                el-radio-button(label="监控并统计" value="profile")
+                el-radio-button(label="监控并统计" value="profile" disabled)
         el-button.action.refresh(
             type="primary"
             circle
