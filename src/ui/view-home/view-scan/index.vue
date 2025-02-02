@@ -66,22 +66,7 @@ const scan_result = computed(() => {
 })
 
 const scanned_wifis = computed(() => {
-    const dict = store_Scan.dict_scanned_wifis
-
-    const list = Object.values(dict).map((SS) => {
-        const list_BSS = Object.values(SS.BSSs)
-        let best_signal_bss = list_BSS[0]
-
-        list_BSS.forEach((bss) => {
-            if (bss.Signal > best_signal_bss.Signal) best_signal_bss = bss
-        })
-
-        return { ...SS, BSS: best_signal_bss }
-    })
-
-    return list.length <= 1 ? list : list.toSorted((a, b) => {
-        return b.BSS.Signal - a.BSS.Signal
-    })
+    return store_Scan.scanned_wifis_normalized
 })
 
 const update_time_formatted = computed(() => {

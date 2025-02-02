@@ -9,7 +9,7 @@ export default async function scanWifi(wlan_card: string)
     })
 }
 
-export function parseScanOutput(scan_output: string): any {
+export function parseScanOutput(scan_output: string) {
     const lines = scan_output.split('\n').slice(4)
 
     const dict_line_group: Record<string, string[]> = {}
@@ -83,7 +83,7 @@ export function parseScanOutput(scan_output: string): any {
         composed[ssid] = layer_ss
     }
 
-    return composed as Record<string, WC.WlanCardInfo>
+    return composed as Record<string, WC.WlanSSInfo>
 }
 
 function parseLine(line: string)
@@ -103,4 +103,24 @@ function getLineIndent(str: string)
 {
     const match = str.match(/^ */)
     return match ? match[0].length : 0
+}
+
+export function toNormalizedScanOutput(parsed_output: Record<string, WC.WlanSSInfo>)
+{
+    const dict = parsed_output
+
+    const list = Object.values(dict).map((SS) => {
+        const list_BSS = Object.values(SS.BSSs)
+        let best_signal_bss = list_BSS[0]
+
+        list_BSS.forEach((bss) => {
+            if (bss.Signal > best_signal_bss.Signal) best_signal_bss = bss
+        })
+
+        return { ...SS, BSS: best_signal_bss }
+    })
+
+    return list.length <= 1 ? list : list.toSorted((a, b) => {
+        return b.BSS.Signal - a.BSS.Signal
+    })
 }

@@ -1,4 +1,4 @@
-import { parseScanOutput } from "@/logic/scan"
+import { parseScanOutput, toNormalizedScanOutput } from "@/logic/scan"
 import { defineStore } from "pinia"
 
 
@@ -18,6 +18,10 @@ const useStore = defineStore('/Scan', {
         dict_scanned_wifis(state): Record<string, WC.WlanSSInfo>
         {
             return parseScanOutput(state.wifi_scan_result.data)
+        },
+        scanned_wifis_normalized(): any
+        {
+            return toNormalizedScanOutput(this.dict_scanned_wifis)
         },
     },
 })
