@@ -22,22 +22,8 @@
             IconCheckOne(size="14px").icon
             .title
                 |已完成
-        //- el-tabs.menu-tabs(
-        //-     v-model="menu_at"
-        //-     type="border-card"
-        //-     tab-position="left"
-        //- )
-        //-     el-tab-pane(name="running" label="执行中")
-        //-     el-tab-pane(name="completed" label="已完成")
     .tasks
         .head
-            //- .wlan-cards
-            //-     .wlan-card(
-            //-         v-for="(tasks, wlan_card_name) of tasks_running"
-            //-         :key="wlan_card_name"
-            //-         :class="{ 'o-active': wlan_card_name === selected_wlan_card }"
-            //-     )
-            //-         |{{ wlan_card_name }} ({{ tasks.length }})
             el-segmented.wlan-cards(
                 v-model="wlan_card_nav_at"
                 :options="wlan_crads_options"
@@ -62,13 +48,9 @@
                                 |{{ task.progress }} % ( 0 / 100,000,000 )
                             .estimated-time(title="估计剩余用时")
                                 |00:00:00
-                    //- .actions
-                    //-     .action.run
-                    //-         IconPlayOne(size="16px")
-                    //-     .action.delete
                     .main-action
-                        .action.run
-                           IconPlayOne(size="24px")
+                        IconPlayOne.action.run(size="24px" v-if="task.status === 'pending'")
+                        IconPause.action.pause(size="24px" v-else-if="task.status === 'running'")
                     .delete-button(title="删除任务")
                         IconClose(size="12px")
     el-dialog.modal.view-tasks_create-task(
@@ -184,6 +166,7 @@ import {
     Round as IconRound,
     PlayOne as IconPlayOne,
     Close as IconClose,
+    Pause as IconPause,
 } from "@icon-park/vue-next"
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
@@ -402,13 +385,6 @@ $root = '#view-tasks'
                                 // 
                        .title
                             font-size 14px
-                    // .actions
-                    //     display flex
-                    //     height 100%
-                    //     >.action
-                    //         cursor pointer
-                    //     >.action.run
-                    //         // 
                     .main-action
                         height calc(100% - 16px)
                         aspect-ratio 1
