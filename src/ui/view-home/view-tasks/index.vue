@@ -35,17 +35,17 @@
                     :key="task.ssid"
                 )
                     .icon
-                        IconRound(v-if="task.status === 'pending'" size="16px")
-                        IconSignalOne(v-else-if="task.status === 'running'" size="16px")
+                        IconRound(v-if="task.status === 'pending'" size="24px")
+                        IconSignalOne(v-else-if="task.status === 'running'" size="24px")
                     .main
                         .title
                             |{{ task.ssid }}
                         el-progress.progress-bar(
-                            :percentage="task.progress"
+                            :percentage="calculateTaskProgress(task)"
                         )
                         .progress-info
-                            .combinations-consumption(title="已尝试的组合数")
-                                |{{ task.progress }} % ( 0 / 100,000,000 )
+                            .combinations-consumption(title="尝试的组合数")
+                                |{{ calculateTaskProgress(task) }} % ( {{ task.iterations }} / {{ task.iterations_total }}  )
                             .estimated-time(title="估计剩余用时")
                                 |00:00:00
                     .main-action
@@ -171,6 +171,7 @@ import {
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
 import CrackTask from "@/logic/CrackTask"
+import { getCrackStrategiesIterationsTotal } from "@/logic/crack"
 
 defineOptions({ name: 'view-tasks' })
 
@@ -195,7 +196,7 @@ const wlan_crads_options = computed(() => {
     return Object.keys(store_Tasks.running).map((wlan_card_name) => {
         return {
             value: wlan_card_name,
-            label: `${wlan_card_name} ( ${store_Tasks.running[wlan_card_name].length} )`,
+            label: `${wlan_card_name} (${store_Tasks.running[wlan_card_name].length})`,
         }
     }) 
 })
@@ -203,6 +204,11 @@ const wlan_crads_options = computed(() => {
 const tasks_running_in_view = computed(() => {
     return store_Tasks.running[wlan_card_nav_at.value]
 })
+
+function calculateTaskProgress(task: CrackTask)
+{
+    return Number((task.iterations / task.iterations_total * 100).toFixed(2))
+}
 
 function createTask()
 {
@@ -229,16 +235,19 @@ function createTask()
 
     // 校验通过，创建任务 //
     const tasks = form_task_setup.wlans.map((wlan) => {
+        const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
+
         return new CrackTask({
             ssid: wlan,
             status: 'pending',
-            progress: 0,
+            iterations: 0,
+            iterations_total: getCrackStrategiesIterationsTotal(form_task_setup.strategies, custom_strategies_normalized),
             setup:
             {
                 ctime: Date.now(),
                 device: form_task_setup.device,
                 strategies: form_task_setup.strategies,
-                custom_strategies: form_task_setup.custom_strategies.split('\n'),
+                custom_strategies: custom_strategies_normalized,
                 connection_interval: 0,
                 random_mac: false,
             },
@@ -353,21 +362,25 @@ $root = '#view-tasks'
                     align-items center
                     column-gap 8px
                     width 100%
-                    padding 8px
-                    padding-right 16px
+                    padding 16px
+                    padding-left 8px
                     border-radius 8px
-                   .icon
+                    .icon
                         height calc(100% - 16px)
                         aspect-ratio 1
                         display flex
                         align-items center
                         justify-content center
-                   .main
+                        color $black40
+                    .main
                         display flex
                         flex-direction column
                         width 0px
                         flex-grow 1
                         row-gap 8px
+                        >.title
+                            font-size 14px
+                            line-height 14px
                         >.progress-bar
                             width 100%
                             .el-progress__text
@@ -377,14 +390,13 @@ $root = '#view-tasks'
                             align-items center
                             column-gap 8px
                             font-size 12px
+                            line-height 14px
                             color $black40
                             justify-content space-between
                            .estimated-time
                                 //
                            .combinations-consumption
                                 // 
-                       .title
-                            font-size 14px
                     .main-action
                         height calc(100% - 16px)
                         aspect-ratio 1
@@ -411,7 +423,7 @@ $root = '#view-tasks'
                             color $black
                     &:hover
                         background-color $shadow03
-                        .delete-button
+                        & .delete-button
                             display flex
 .modal.view-tasks_create-task
     .modal-content

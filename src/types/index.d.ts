@@ -68,7 +68,10 @@ declare namespace WC
     {
         ssid: string
         status: 'pending' | 'running' | 'completed'
-        progress: number
+        /** 总迭代数 */
+        iterations_total: number
+        /** 已完成的迭代数 */
+        iterations: number
         setup:
         {
             ctime: number

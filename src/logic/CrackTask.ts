@@ -2,7 +2,8 @@ export default class CrackTask implements WC.CrackTask
 {
     ssid: WC.CrackTask["ssid"] = ''
     status: WC.CrackTask["status"] = 'pending'
-    progress: WC.CrackTask["progress"] = 0
+    iterations_total: number = 0
+    iterations: number = 0
     setup: WC.CrackTask["setup"] =
     {
         ctime: 0,
