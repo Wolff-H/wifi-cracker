@@ -1,5 +1,7 @@
 declare namespace WC
 {
+    type CrackStrategy = keyof typeof import("@/constants").dict_password_strategy
+
     interface TimestampedResponse<T>
     {
         timestamp: number
@@ -61,4 +63,26 @@ declare namespace WC
             }
         }
     }
+
+    interface CrackTask
+    {
+        ssid: string
+        status: 'pending' | 'running' | 'completed'
+        progress: number
+        setup:
+        {
+            ctime: number
+            device: string
+            strategies: CrackStrategy[]
+            custom_strategies: string[]
+            connection_interval: number
+            random_mac: boolean
+        }
+        result:
+        {
+            ctime: number
+            password: string
+        } | null
+    }
+
 }
