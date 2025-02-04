@@ -28,6 +28,14 @@ export default async function initialize()
         store_Tasks.wlan_card_nav_at = store_Scan.selected_device
     })
 
+    // TODO
+    // 读取密码本存储到全局对象 //
+    // await invoke('read_passwordbook').then((response) => {
+    //     console.log('passwordbook :', response)
+
+    //     window.__passwordbook = response
+    // })
+
     // 扫描 WiFi 网络 //
     await scanWifi(store_Scan.selected_device)
 

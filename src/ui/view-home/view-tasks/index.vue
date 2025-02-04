@@ -34,7 +34,7 @@
                     v-for="(task) of tasks_running_in_view"
                     :key="task.ssid"
                 )
-                    .icon
+                    .status(:title="JSON.stringify(task.setup, undefined, 4)")
                         IconRound(v-if="task.status === 'pending'" size="24px")
                         IconSignalOne(v-else-if="task.status === 'running'" size="24px")
                     .main
@@ -365,8 +365,9 @@ $root = '#view-tasks'
                     padding 16px
                     padding-left 8px
                     border-radius 8px
-                    .icon
-                        height calc(100% - 16px)
+                    .status
+                        // height calc(100% - 16px)
+                        height 40px
                         aspect-ratio 1
                         display flex
                         align-items center
