@@ -178,8 +178,8 @@ import {
 } from "@icon-park/vue-next"
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
-import CrackTask from "@/logic/CrackTask"
-import crack_task_manager from "@/logic/CrackTaskManager"
+import CrackTask from "@/logic/tasks/CrackTask"
+import crack_task_manager from "@/logic/tasks/CrackTaskManager"
 
 defineOptions({ name: 'view-tasks' })
 

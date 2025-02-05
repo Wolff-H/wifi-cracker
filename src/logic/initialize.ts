@@ -1,5 +1,5 @@
 import scanWifi from "./scan"
-import crack_task_manager from "./CrackTaskManager"
+import crack_task_manager from "./tasks/CrackTaskManager"
 
 export default async function initialize()
 {

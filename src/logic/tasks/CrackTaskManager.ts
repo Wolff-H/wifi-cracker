@@ -37,10 +37,10 @@ class WlanCardCrackTaskManager
      */
     private wlan_card: string
 
-    // /**
-    //  * 当前正在执行的任务的。
-    //  */
-    // running_task_timer: undefined | number = undefined
+    /**
+     * 当前正在执行的任务的 Timeout id。
+     */
+    running_task_timer: undefined | number = undefined
 
     constructor(wlan_card: string)
     {
@@ -105,6 +105,13 @@ class WlanCardCrackTaskManager
         // 将任务移到队列首位 //
         // const _index = index ?? queue_task.findIndex((task) => (task.id === task.id))
         // ;[queue_task[_index], queue_task[0]] = [queue_task[0], queue_task[_index]]
+
+        // 开始执行任务 //
+        // await invoke('create_wlan_profile', )
+
+        this.running_task_timer = window.setTimeout(() => {
+            
+        }, task.setup.connection_interval * 1000)
     }
 
     pause(task: WC.CrackTask): void
