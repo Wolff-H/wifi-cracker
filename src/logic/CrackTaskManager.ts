@@ -37,6 +37,11 @@ class WlanCardCrackTaskManager
      */
     private wlan_card: string
 
+    // /**
+    //  * 当前正在执行的任务的。
+    //  */
+    // running_task_timer: undefined | number = undefined
+
     constructor(wlan_card: string)
     {
         this.wlan_card = wlan_card
@@ -62,29 +67,59 @@ class WlanCardCrackTaskManager
 
         if (queue_task.length && !queue_task.some((task) => (task.status === 'running')))
         {
-            this.run(queue_task[0], 0)
+            this.run(queue_task[0])
         }
     }
 
     /**
      * 执行一个任务。这将会暂停当前正在执行的任务（如果当前执行任务等同于传入的任务）。
      * @param task 任务。
-     * @param index 任务在队列中的索引。
      */
-    run(task: WC.CrackTask, index?: number)
+    run(task: WC.CrackTask): void
+    /**
+     * 执行一个任务。这将会暂停当前正在执行的任务（如果当前执行任务等同于传入的任务）。
+     * @param task_id 任务 ID。
+     */
+    run(task_id: string): void
+    /**
+     * 执行一个任务。这将会暂停当前正在执行的任务（如果当前执行任务等同于传入的任务）。
+     * @param task_index 任务索引。
+     */
+    run(task_index: number): void
+    run(arg1: WC.CrackTask | string | number)
     {
+        let task: null | WC.CrackTask = null
         const queue_task = store_Tasks.uncompleted[this.wlan_card]
+        
+        if (typeof arg1 === 'string') task = queue_task.find((task) => (task.id === arg1))!
+        else if (typeof arg1 ==='number') task = queue_task[arg1]
+        else task = arg1
 
         const current_running_task = queue_task.find((task) => (task.status === 'running'))
 
         if(current_running_task && current_running_task.id !== task.id) current_running_task.status = 'pending'
-
-        // const _index = index ?? queue_task.findIndex((task) => (task.id === task.id))
-
+        
         task.status = 'running'
+        console.log('task :', task);
         
         // 将任务移到队列首位 //
+        // const _index = index ?? queue_task.findIndex((task) => (task.id === task.id))
         // ;[queue_task[_index], queue_task[0]] = [queue_task[0], queue_task[_index]]
+    }
+
+    pause(task: WC.CrackTask): void
+    pause(task_id: string): void
+    pause(task_index: number): void
+    pause(arg1: WC.CrackTask | string | number)
+    {
+        let task: null | WC.CrackTask = null
+        const queue_task = store_Tasks.uncompleted[this.wlan_card]
+        
+        if (typeof arg1 === 'string') task = queue_task.find((task) => (task.id === arg1))!
+        else if (typeof arg1 ==='number') task = queue_task[arg1]
+        else task = arg1
+
+        task.status = 'pending'
     }
 }
 

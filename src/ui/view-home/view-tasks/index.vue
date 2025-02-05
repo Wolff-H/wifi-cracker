@@ -31,7 +31,7 @@
         .body
             .task-list
                 .task(
-                    v-for="(task) of tasks_running_in_view"
+                    v-for="(task, index) of tasks_running_in_view"
                     :key="task.ssid"
                 )
                     .status(:title="JSON.stringify(task.setup, undefined, 4)")
@@ -49,8 +49,16 @@
                             .estimated-time(title="估计剩余用时")
                                 |00:00:00
                     .main-action
-                        IconPlayOne.action.run(size="24px" v-if="task.status === 'pending'")
-                        IconPause.action.pause(size="24px" v-else-if="task.status === 'running'")
+                        IconPlayOne.action.run(
+                            v-if="task.status === 'pending'"
+                            size="24px"
+                            @click="runTask(index)"
+                        )
+                        IconPause.action.pause(
+                            v-else-if="task.status === 'running'"
+                            size="24px"
+                            @click="pauseTask(index)"
+                        )
                     .delete-button(title="删除任务")
                         IconClose(size="12px")
     el-dialog.modal.view-tasks_create-task(
@@ -261,6 +269,20 @@ function createTask()
 
     // 关闭弹窗 //
     if_render_create_task_modal.value = false    
+}
+
+function runTask(task_index: number)
+{
+    const crack_task_submanager = crack_task_manager.wlan_cards[wlan_card_nav_at.value]
+
+    crack_task_submanager.run(task_index)
+}
+
+function pauseTask(task_index: number)
+{
+    const crack_task_submanager = crack_task_manager.wlan_cards[wlan_card_nav_at.value]
+
+    crack_task_submanager.pause(task_index)
 }
 
 watch(if_render_create_task_modal, (new_val) => {
