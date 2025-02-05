@@ -171,7 +171,6 @@ import {
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
 import CrackTask from "@/logic/CrackTask"
-// import { getCrackStrategiesIterationsTotal } from "@/logic/crack"
 import crack_task_manager from "@/logic/CrackTaskManager"
 
 defineOptions({ name: 'view-tasks' })
@@ -189,8 +188,6 @@ const form_task_setup = reactive({
     random_mac: false,
 })
 
-// const tasks_running = toRef(store_Tasks, 'running')
-// const tasks_completed = toRef(store_Tasks, 'completed')
 const wlan_card_nav_at = toRef(store_Tasks, 'wlan_card_nav_at')
 
 const wlan_crads_options = computed(() => {
@@ -217,11 +214,6 @@ const tasks_running_in_view = computed(() => {
     }) || [] // 在状态卡未初始化网卡时，返回空数组
 })
 
-// function calculateTaskProgress(task: CrackTask)
-// {
-//     return Number((task.iterations / task.iterations_total * 100).toFixed(2))
-// }
-
 function createTask()
 {
     // 校验表单 //
@@ -246,30 +238,6 @@ function createTask()
     if (!if_valid_form) return
 
     // 校验通过，创建任务 //
-    // const tasks = form_task_setup.wlans.map((wlan) => {
-    //     const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
-
-    //     return new CrackTask({
-    //         ssid: wlan,
-    //         status: 'pending',
-    //         iterations: 0,
-    //         iterations_total: getCrackStrategiesIterationsTotal(form_task_setup.strategies, custom_strategies_normalized),
-    //         setup:
-    //         {
-    //             ctime: Date.now(),
-    //             device: form_task_setup.device,
-    //             strategies: form_task_setup.strategies,
-    //             custom_strategies: custom_strategies_normalized,
-    //             connection_interval: 1,
-    //             random_mac: false,
-    //         },
-    //         result:
-    //         {
-    //             ctime: 0,
-    //             password: '',
-    //         },
-    //     })
-    // })
     const tasks = form_task_setup.wlans.map((wlan) => {
         const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
 
@@ -290,14 +258,6 @@ function createTask()
     const crack_task_submanager = crack_task_manager.wlan_cards[form_task_setup.device]
     
     crack_task_submanager.add(tasks)
-
-    // // 设置网卡环境
-    // store_Tasks.running[form_task_setup.device].unshift(...tasks)
-
-    // if (!store_Tasks.running[form_task_setup.device].some((task) => task.status === 'running'))
-    // {
-    //     // 如果当前网卡没有任务在运行，则开始第一个任务 //
-    // }
 
     // 关闭弹窗 //
     if_render_create_task_modal.value = false    
@@ -398,7 +358,6 @@ $root = '#view-tasks'
                     padding-left 8px
                     border-radius 8px
                     .status
-                        // height calc(100% - 16px)
                         height 40px
                         aspect-ratio 1
                         display flex
