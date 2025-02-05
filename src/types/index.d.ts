@@ -66,12 +66,17 @@ declare namespace WC
 
     interface CrackTask
     {
+        id: string
         ssid: string
         status: 'pending' | 'running' | 'completed'
-        /** 总迭代数 */
-        iterations_total: number
-        /** 已完成的迭代数 */
-        iterations: number
+        // /** 总迭代数 */
+        // iterations_total: number
+        /** 策略的迭代进度。 */
+        iterations:
+        {
+            total: number
+            progress: Partial<Record<WC.CrackStrategy, [cursor: number, total: number]>>
+        }
         setup:
         {
             ctime: number
@@ -87,5 +92,11 @@ declare namespace WC
             password: string
         } | null
     }
+
+    // interface WlanCrackTasksState
+    // {
+    //     running: null | CrackTask
+    //     queue: CrackTask[]
+    // }
 
 }

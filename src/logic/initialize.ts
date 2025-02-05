@@ -1,4 +1,5 @@
 import scanWifi from "./scan"
+import crack_task_manager from "./CrackTaskManager"
 
 export default async function initialize()
 {
@@ -21,10 +22,6 @@ export default async function initialize()
 
         // 默认选择第一个设备为扫描执行设备 //
         store_Scan.selected_device = store_Device.wlan_cards[0].Name
-        // 设置任务状态库入口 //
-        store_Device.wlan_cards.forEach((card) => {
-            store_Tasks.running[card.Name] = []
-        })
         store_Tasks.wlan_card_nav_at = store_Scan.selected_device
     })
 
@@ -38,6 +35,9 @@ export default async function initialize()
 
     // 扫描 WiFi 网络 //
     await scanWifi(store_Scan.selected_device)
+
+    // 初始化任务管理器 //
+    crack_task_manager.initialize(store_Device.wlan_cards.map((card) => (card.Name)))
 
     console.log('initialized')
 }

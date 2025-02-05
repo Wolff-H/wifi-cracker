@@ -4,7 +4,7 @@ import { defineStore } from "pinia"
 
 const useStore = defineStore('/Tasks', {
     state: (): _S => ({
-        running: {},
+        uncompleted: {},
         completed: [],
         wlan_card_nav_at: '',
     }),
@@ -12,7 +12,7 @@ const useStore = defineStore('/Tasks', {
 
 type _S =
 {
-    running: Record<string, WC.CrackTask[]>
+    uncompleted: Record<string, WC.CrackTask[]>
     completed: any[]
     wlan_card_nav_at: string
 }

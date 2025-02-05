@@ -8,13 +8,13 @@
             )
                 IconPlus(size="24px" style="margin-right: 4px;")
                 |新建
-        .menu-item.running(
-            :class="{ 'o-active': menu_at === 'running' }"
-            @click="menu_at = 'running'"
+        .menu-item.uncompleted(
+            :class="{ 'o-active': menu_at === 'uncompleted' }"
+            @click="menu_at = 'uncompleted'"
         )
             IconSignalOne(size="14px").icon
             .title
-                |执行中
+                |待完成
         .menu-item.completed(
             :class="{ 'o-active': menu_at === 'completed' }"
             @click="menu_at = 'completed'"
@@ -41,11 +41,11 @@
                         .title
                             |{{ task.ssid }}
                         el-progress.progress-bar(
-                            :percentage="calculateTaskProgress(task)"
+                            :percentage="task._progress.percentage"
                         )
                         .progress-info
                             .combinations-consumption(title="尝试的组合数")
-                                |{{ calculateTaskProgress(task) }} % ( {{ task.iterations }} / {{ task.iterations_total }}  )
+                                |{{ task._progress.percentage }} % ( {{ task._progress.combinations_consumption.join(' / ') }} )
                             .estimated-time(title="估计剩余用时")
                                 |00:00:00
                     .main-action
@@ -171,11 +171,12 @@ import {
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
 import CrackTask from "@/logic/CrackTask"
-import { getCrackStrategiesIterationsTotal } from "@/logic/crack"
+// import { getCrackStrategiesIterationsTotal } from "@/logic/crack"
+import crack_task_manager from "@/logic/CrackTaskManager"
 
 defineOptions({ name: 'view-tasks' })
 
-const menu_at = ref<'running' | 'completed'>('running')
+const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
 const current_scanned_wlans = ref<any[]>([])
 
@@ -188,27 +189,38 @@ const form_task_setup = reactive({
     random_mac: false,
 })
 
-const tasks_running = toRef(store_Tasks, 'running')
-const tasks_completed = toRef(store_Tasks, 'completed')
+// const tasks_running = toRef(store_Tasks, 'running')
+// const tasks_completed = toRef(store_Tasks, 'completed')
 const wlan_card_nav_at = toRef(store_Tasks, 'wlan_card_nav_at')
 
 const wlan_crads_options = computed(() => {
-    return Object.keys(store_Tasks.running).map((wlan_card_name) => {
+    return Object.keys(store_Tasks.uncompleted).map((wlan_card_name) => {
         return {
             value: wlan_card_name,
-            label: `${wlan_card_name} (${store_Tasks.running[wlan_card_name].length})`,
+            label: `${wlan_card_name} (${store_Tasks.uncompleted[wlan_card_name].length})`,
         }
-    }) 
+    })
 })
 
 const tasks_running_in_view = computed(() => {
-    return store_Tasks.running[wlan_card_nav_at.value]
+    return store_Tasks.uncompleted[wlan_card_nav_at.value]?.map((task) => {
+        const iterations_consumed = Object.values(task.iterations.progress).map(([i, _]) => i).reduce((a, b) => a + b, 0)
+        return {
+            ...task,
+            _progress:
+            {
+                percentage: Number((iterations_consumed / task.iterations.total * 100).toFixed(2)),
+                combinations_consumption: [iterations_consumed, task.iterations.total],
+                estimated_time: '00:00:00',
+            },
+        }
+    }) || [] // 在状态卡未初始化网卡时，返回空数组
 })
 
-function calculateTaskProgress(task: CrackTask)
-{
-    return Number((task.iterations / task.iterations_total * 100).toFixed(2))
-}
+// function calculateTaskProgress(task: CrackTask)
+// {
+//     return Number((task.iterations / task.iterations_total * 100).toFixed(2))
+// }
 
 function createTask()
 {
@@ -234,38 +246,58 @@ function createTask()
     if (!if_valid_form) return
 
     // 校验通过，创建任务 //
+    // const tasks = form_task_setup.wlans.map((wlan) => {
+    //     const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
+
+    //     return new CrackTask({
+    //         ssid: wlan,
+    //         status: 'pending',
+    //         iterations: 0,
+    //         iterations_total: getCrackStrategiesIterationsTotal(form_task_setup.strategies, custom_strategies_normalized),
+    //         setup:
+    //         {
+    //             ctime: Date.now(),
+    //             device: form_task_setup.device,
+    //             strategies: form_task_setup.strategies,
+    //             custom_strategies: custom_strategies_normalized,
+    //             connection_interval: 1,
+    //             random_mac: false,
+    //         },
+    //         result:
+    //         {
+    //             ctime: 0,
+    //             password: '',
+    //         },
+    //     })
+    // })
     const tasks = form_task_setup.wlans.map((wlan) => {
         const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
 
         return new CrackTask({
             ssid: wlan,
-            status: 'pending',
-            iterations: 0,
-            iterations_total: getCrackStrategiesIterationsTotal(form_task_setup.strategies, custom_strategies_normalized),
             setup:
             {
                 ctime: Date.now(),
                 device: form_task_setup.device,
                 strategies: form_task_setup.strategies,
                 custom_strategies: custom_strategies_normalized,
-                connection_interval: 0,
+                connection_interval: 1,
                 random_mac: false,
-            },
-            result:
-            {
-                ctime: 0,
-                password: '',
             },
         })
     })
 
-    // 设置网卡环境
-    store_Tasks.running[form_task_setup.device].unshift(...tasks)
+    const crack_task_submanager = crack_task_manager.wlan_cards[form_task_setup.device]
+    
+    crack_task_submanager.add(tasks)
 
-    if (!store_Tasks.running[form_task_setup.device].some((task) => task.status === 'running'))
-    {
-        // 如果当前网卡没有任务在运行，则开始第一个任务 //
-    }
+    // // 设置网卡环境
+    // store_Tasks.running[form_task_setup.device].unshift(...tasks)
+
+    // if (!store_Tasks.running[form_task_setup.device].some((task) => task.status === 'running'))
+    // {
+    //     // 如果当前网卡没有任务在运行，则开始第一个任务 //
+    // }
 
     // 关闭弹窗 //
     if_render_create_task_modal.value = false    
