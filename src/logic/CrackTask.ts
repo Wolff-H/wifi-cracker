@@ -59,7 +59,7 @@ function constructIterations(strategies: WC.CrackStrategy[], custom_strategies: 
         switch (strategy)
         {
             case 'passwordbook':
-                iterations.progress[strategy] = [0, 200] // TODO: 从真实密码本文件中获取总数
+                iterations.progress[strategy] = [0, store.passwordbook_list.length]
                 break
             case 'digits_8':
                 iterations.progress[strategy] = [0, 10 ** 8]
