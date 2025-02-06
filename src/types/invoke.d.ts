@@ -6,7 +6,7 @@ declare namespace Commands
         get_device_info: [never, WC.TimestampedResponse<string>]
         scan_wifi: [{ wlan_card: string }, WC.TimestampedResponse<string>]
         read_passwordbook: [never, string]
-        create_wlan_profile: [string, string]
+        create_wlan_profile: [{ content: string }, string]
     }
 }
 

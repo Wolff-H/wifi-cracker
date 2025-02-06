@@ -1,3 +1,5 @@
+import composetWlanProfile from "./composeWlanProfile"
+
 class CrackTaskManager
 {
     /**
@@ -107,7 +109,13 @@ class WlanCardCrackTaskManager
         // ;[queue_task[_index], queue_task[0]] = [queue_task[0], queue_task[_index]]
 
         // 开始执行任务 //
-        // await invoke('create_wlan_profile', 123)
+        // await invoke('create_wlan_profile', {
+        //     content: composetWlanProfile({
+        //         ssid: task.ssid,
+        //         password: ,
+
+        //     })
+        // })
 
         this.running_task_timer = window.setTimeout(() => {
             
@@ -131,3 +139,15 @@ class WlanCardCrackTaskManager
 }
 
 export default new CrackTaskManager()
+
+
+
+
+
+/**
+ * 获取当次迭代的密码。
+ */
+function getIterationPassword(strategy: WC.CrackStrategy | string[], cursor: number)
+{
+
+}

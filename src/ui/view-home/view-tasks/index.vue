@@ -38,7 +38,7 @@
                         IconRound(v-if="task.status === 'pending'" size="24px")
                         IconSignalOne(v-else-if="task.status === 'running'" size="24px")
                     .main
-                        .title
+                        .title(:title="JSON.stringify(JSON.parse(task.wlan_info), undefined, 4)")
                             |{{ task.ssid }}
                         el-progress.progress-bar(
                             :percentage="task._progress.percentage"
@@ -187,6 +187,10 @@ const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
 const current_scanned_wlans = ref<any[]>([])
 
+const dict_current_scanned_wlan = computed(() => {
+    return Object.fromEntries(current_scanned_wlans.value.map(ss => [ss._SSID, ss])) as Record<string, WC.WlanSSInfoNormalized>
+})
+
 const form_task_setup = reactive({
     device: '',
     strategies: [] as WC.CrackStrategy[],
@@ -209,17 +213,32 @@ const wlan_crads_options = computed(() => {
 
 const tasks_running_in_view = computed(() => {
     return store_Tasks.uncompleted[wlan_card_nav_at.value]?.map((task) => {
-        const iterations_consumed = Object.values(task.iterations.progress).map(([i, _]) => i).reduce((a, b) => a + b, 0)
+        // const iterations_consumed = Object.values(task.iterations.progress).map(([i, _]) => i).reduce((a, b) => a + b, 0)
+        let iterations_consumed = 0
+
+        for (const [_, cursor, subtotal] of task.progress.iterations)
+        {
+            if (cursor === subtotal)
+            {
+                iterations_consumed += subtotal
+            }
+            else
+            {
+                iterations_consumed += cursor
+                break
+            }
+        }
+
         return {
             ...task,
             _progress:
             {
-                percentage: Number((iterations_consumed / task.iterations.total * 100).toFixed(2)),
-                combinations_consumption: [iterations_consumed, task.iterations.total],
+                percentage: Number((iterations_consumed / task.progress.total * 100).toFixed(2)),
+                combinations_consumption: [iterations_consumed, task.progress.total],
                 estimated_time: '00:00:00',
             },
         }
-    }) || [] // 在状态卡未初始化网卡时，返回空数组
+    }) || [] // 在状态库未初始化网卡时，返回空数组
 })
 
 function createTask()
@@ -246,6 +265,8 @@ function createTask()
     if (!if_valid_form) return
 
     // 校验通过，创建任务 //
+    const dict_wlan = dict_current_scanned_wlan.value
+
     const tasks = form_task_setup.wlans.map((wlan) => {
         const custom_strategies_normalized = form_task_setup.custom_strategies.split('\n').filter((v) => v)
 
@@ -260,6 +281,7 @@ function createTask()
                 connection_interval: 1,
                 random_mac: false,
             },
+            wlan_info: JSON.stringify(dict_wlan[wlan]),
         })
     })
 

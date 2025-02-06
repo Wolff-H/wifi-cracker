@@ -64,18 +64,77 @@ declare namespace WC
         }
     }
 
+    interface WlanSSInfoNormalized
+    {
+        '_SSID': string
+        'Network type': string
+        'Authentication': string
+        'Encryption': string
+        'BSSs':
+        {
+            [BSS: string]:
+            {
+                '_BSSID': string
+                'Signal': number
+                'Radio type': string
+                'Band': string
+                'Channel': number
+                'Bss Load'?:
+                {
+                    'Connected Stations': string
+                    'Channel Utilization': string
+                    'Medium Available Capacity': string
+                }
+                'QoS MSCS Supported': string
+                'QoS Map Supported': string
+                'Basic rates (Mbps)': string
+                'Other rates (Mbps)': string
+            }
+        }
+        'BSS':
+        {
+            '_BSSID': string
+            'Signal': number
+            'Radio type': string
+            'Band': string
+            'Channel': number
+            'Bss Load'?:
+            {
+                'Connected Stations': string
+                'Channel Utilization': string
+                'Medium Available Capacity': string
+            }
+            'QoS MSCS Supported': string
+            'QoS Map Supported': string
+            'Basic rates (Mbps)': string
+            'Other rates (Mbps)': string
+        }
+    }
+
     interface CrackTask
     {
         id: string
         ssid: string
         status: 'pending' | 'running' | 'completed'
+        wlan_info: string
         // /** 总迭代数 */
         // iterations_total: number
         /** 策略的迭代进度。 */
-        iterations:
+        // iterations:
+        // {
+        //     total: number
+        //     // progress: Partial<Record<WC.CrackStrategy, [cursor: number, total: number]>>
+        //     /** cursor 是最新已执行掉的迭代。如果 cursor 等同于 total，则说明该策略已迭代完。 */
+        //     progress: [strategy: string, cursor: number, total: number][]
+        // }
+        progress:
         {
+            /** 总迭代数。 */
             total: number
-            progress: Partial<Record<WC.CrackStrategy, [cursor: number, total: number]>>
+            /** 已迭代完毕的阶段（策略）数。 */
+            stage: number
+            /** 迭代详情。cursor 是最新已执行完毕的迭代。如果 cursor 等同于 total，则说明该策略已迭代完。 */
+            iterations: [strategy: string, cursor: number, total: number][]
         }
         setup:
         {

@@ -19,10 +19,14 @@ const useStore = defineStore('/Scan', {
         {
             return parseScanOutput(state.wifi_scan_result.data)
         },
-        scanned_wifis_normalized(): any
+        scanned_wifis_normalized(): WC.WlanSSInfoNormalized[]
         {
             return toNormalizedScanOutput(this.dict_scanned_wifis)
         },
+        // dict_scanned_wifis_normalized(): Record<string, WC.WlanSSInfoNormalized>
+        // {
+        //     return Object.fromEntries(this.scanned_wifis_normalized.map(ss => [ss._SSID, ss]))
+        // },
     },
 })
 

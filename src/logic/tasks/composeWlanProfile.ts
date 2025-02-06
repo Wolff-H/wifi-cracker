@@ -1,8 +1,14 @@
-export default function constructWlanProfile(params: {
+/**
+ * @TODO 添加 hex 支持。（中文 <name> 可能不被识别，需要转译到 hex）
+ * @param params 
+ * @returns 
+ */
+export default function composetWlanProfile(params: {
     ssid: string
     authentication: string
     encryption: string
     random_mac: boolean
+    password: string
 }): string
 {
     const randomization_seed = params.random_mac ? Math.floor(Math.random() * 10 ** 9) : 0
@@ -10,7 +16,7 @@ export default function constructWlanProfile(params: {
     return `\
 <?xml version="1.0"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
-	<name>${'wc__' + params.ssid}</name>
+	<name>${params.ssid}</name>
 	<SSIDConfig>
 		<SSID>
 			<name>${params.ssid}</name>
@@ -26,6 +32,11 @@ export default function constructWlanProfile(params: {
 				<useOneX>false</useOneX>
 				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
 			</authEncryption>
+            <sharedKey>
+				<keyType>passPhrase</keyType>
+				<protected>false</protected>
+				<keyMaterial>${params.password}</keyMaterial>
+			</sharedKey>
 		</security>
 	</MSM>
 	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">

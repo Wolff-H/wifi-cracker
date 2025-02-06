@@ -5,10 +5,17 @@ export default class CrackTask implements WC.CrackTask
     id: WC.CrackTask["id"] = ''
     ssid: WC.CrackTask["ssid"] = ''
     status: WC.CrackTask["status"] = 'pending'
-    iterations: WC.CrackTask["iterations"] =
+    wlan_info: WC.CrackTask["wlan_info"] = ''
+    // iterations: WC.CrackTask["iterations"] =
+    // {
+    //     total: 0,
+    //     progress: [],
+    // }
+    progress: WC.CrackTask["progress"] =
     {
         total: 0,
-        progress: {},
+        stage: 0,
+        iterations: [],
     }
     setup: WC.CrackTask["setup"] =
     {
@@ -31,13 +38,14 @@ export default class CrackTask implements WC.CrackTask
         this.id = task?.id || uuidv7()
 
         Object.assign(this, {
-            ssid: task?.ssid || '',
-            status: task?.status || 'pending',
+            ssid: task.ssid || '',
+            status: task.status || 'pending',
             setup: task.setup,
             result: task.result,
+            wlan_info: task.wlan_info || '',
         })
 
-        this.iterations = task.iterations || constructIterations(this.setup.strategies, this.setup.custom_strategies)
+        this.progress = task.progress || constructProgress(this.setup.strategies, this.setup.custom_strategies)
     }
 }
 
@@ -46,12 +54,13 @@ export default class CrackTask implements WC.CrackTask
  * @param strategies 
  * @param custom_strategies 
  */
-function constructIterations(strategies: WC.CrackStrategy[], custom_strategies: string[])
+function constructProgress(strategies: WC.CrackStrategy[], custom_strategies: string[])
 {
-    const iterations: WC.CrackTask["iterations"] =
+    const progress: WC.CrackTask["progress"] =
     {
         total: 0,
-        progress: {},
+        stage: 0,
+        iterations: [],
     }
 
     for (const strategy of strategies)
@@ -59,19 +68,19 @@ function constructIterations(strategies: WC.CrackStrategy[], custom_strategies: 
         switch (strategy)
         {
             case 'passwordbook':
-                iterations.progress[strategy] = [0, store.passwordbook_list.length]
+                progress.iterations.push([strategy, 0, store.passwordbook_list.length])
                 break
             case 'digits_8':
-                iterations.progress[strategy] = [0, 10 ** 8]
+                progress.iterations.push([strategy, 0, 10 ** 8])
                 break
             case 'digits_9':
-                iterations.progress[strategy] = [0, 10 ** 9]
+                progress.iterations.push([strategy, 0, 10 ** 9])
                 break
             case 'digits_10':
-                iterations.progress[strategy] = [0, 10 ** 10]
+                progress.iterations.push([strategy, 0, 10 ** 10])
                 break
             case 'phone_number':
-                iterations.progress[strategy] = [0, 26 * 10 ** 8]
+                progress.iterations.push([strategy, 0, 26 * 10 ** 8])
                 break
             // TODO 自定义策略
             default:
@@ -79,7 +88,7 @@ function constructIterations(strategies: WC.CrackStrategy[], custom_strategies: 
         }
     }
 
-    iterations.total = _.sum(Object.values(iterations.progress).map(([_, subtotal]) => subtotal))
+    progress.total = _.sum(progress.iterations.map((iteration) => iteration[2]))
 
-    return iterations
+    return progress
 }
