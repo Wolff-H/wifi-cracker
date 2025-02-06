@@ -86,7 +86,7 @@ class WlanCardCrackTaskManager
      * @param task_index 任务索引。
      */
     run(task_index: number): void
-    run(arg1: WC.CrackTask | string | number)
+    async run(arg1: WC.CrackTask | string | number)
     {
         let task: null | WC.CrackTask = null
         const queue_task = store_Tasks.uncompleted[this.wlan_card]
@@ -107,7 +107,7 @@ class WlanCardCrackTaskManager
         // ;[queue_task[_index], queue_task[0]] = [queue_task[0], queue_task[_index]]
 
         // 开始执行任务 //
-        // await invoke('create_wlan_profile', )
+        // await invoke('create_wlan_profile', 123)
 
         this.running_task_timer = window.setTimeout(() => {
             
