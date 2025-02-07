@@ -3,15 +3,21 @@
  * @param params 
  * @returns 
  */
-export default function composetWlanProfile(params: {
+export default function composeWlanProfile(params: {
     ssid: string
     authentication: string
-    encryption: string
     random_mac: boolean
-    password: string
+    // password: string
 }): string
 {
     const randomization_seed = params.random_mac ? Math.floor(Math.random() * 10 ** 9) : 0
+
+    let _authentication: 'open' | 'WPA3SAE' | 'WPA2PSK' | 'WPA2' | 'WPAPSK' = 'open'
+
+    if (params.authentication.includes('WPA3')) _authentication = 'WPA3SAE'
+    else if (params.authentication.includes('WPA2')) _authentication = 'WPA2PSK'
+    else if (params.authentication.includes('WPA')) _authentication = 'WPAPSK'
+    else _authentication = 'open' // WEP or Open
 
     return `\
 <?xml version="1.0"?>
@@ -27,20 +33,20 @@ export default function composetWlanProfile(params: {
 	<MSM>
 		<security>
 			<authEncryption>
-				<authentication>${params.authentication}</authentication>
-				<encryption>${params.encryption}</encryption>
+				<authentication>${_authentication}</authentication>
+				<encryption>${_authentication === 'open' ? 'none' : 'AES'}</encryption>
 				<useOneX>false</useOneX>
 				<transitionMode xmlns="http://www.microsoft.com/networking/WLAN/profile/v4">true</transitionMode>
 			</authEncryption>
             <sharedKey>
 				<keyType>passPhrase</keyType>
 				<protected>false</protected>
-				<keyMaterial>${params.password}</keyMaterial>
+				<keyMaterial>__UNSET__</keyMaterial>
 			</sharedKey>
 		</security>
 	</MSM>
 	<MacRandomization xmlns="http://www.microsoft.com/networking/WLAN/profile/v3">
-		<enableRandomization>false</enableRandomization>
+		<enableRandomization>${params.random_mac}</enableRandomization>
 		<randomizationSeed>${randomization_seed}</randomizationSeed>
 	</MacRandomization>
 </WLANProfile>

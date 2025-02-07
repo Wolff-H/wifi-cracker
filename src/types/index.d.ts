@@ -127,6 +127,10 @@ declare namespace WC
         //     /** cursor 是最新已执行掉的迭代。如果 cursor 等同于 total，则说明该策略已迭代完。 */
         //     progress: [strategy: string, cursor: number, total: number][]
         // }
+        log:
+        {
+            failures: [timestamp: number, message: string][]
+        }
         progress:
         {
             /** 总迭代数。 */
@@ -144,6 +148,7 @@ declare namespace WC
             custom_strategies: string[]
             connection_interval: number
             random_mac: boolean
+            max_retries: number
         }
         result:
         {

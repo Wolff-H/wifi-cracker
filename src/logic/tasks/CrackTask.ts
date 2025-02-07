@@ -6,6 +6,10 @@ export default class CrackTask implements WC.CrackTask
     ssid: WC.CrackTask["ssid"] = ''
     status: WC.CrackTask["status"] = 'pending'
     wlan_info: WC.CrackTask["wlan_info"] = ''
+    log: WC.CrackTask["log"] =
+    {
+        failures: [],
+    }
     // iterations: WC.CrackTask["iterations"] =
     // {
     //     total: 0,
@@ -25,6 +29,7 @@ export default class CrackTask implements WC.CrackTask
         custom_strategies: [],
         connection_interval: 1,
         random_mac: false,
+        max_retries: 100,
     }
     result: WC.CrackTask["result"] =
     {
@@ -40,6 +45,7 @@ export default class CrackTask implements WC.CrackTask
         Object.assign(this, {
             ssid: task.ssid || '',
             status: task.status || 'pending',
+            log: task.log,
             setup: task.setup,
             result: task.result,
             wlan_info: task.wlan_info || '',

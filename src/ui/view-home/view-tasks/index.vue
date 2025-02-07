@@ -68,9 +68,9 @@
     )
         .modal-content
             .section.device-select
-                .head
+                .label
                     |无线网卡
-                .body
+                .content
                     el-select(
                         v-model="form_task_setup.device"
                         placeholder="选择无线网卡设备"
@@ -84,9 +84,9 @@
                             :title="`${card.Description}  •  GUID: ${card.GUID}`"
                         )
             .section.strategy-select
-                .head
+                .label
                     |密码策略
-                .body
+                .content
                     el-select(
                         v-model="form_task_setup.strategies"
                         placeholder="选择密码策略"
@@ -110,9 +110,9 @@
                         placeholder="自定义密码策略，每行一条"
                     )
             .section.wlan-select
-                .head
+                .label
                     |无线网络
-                .body
+                .content
                     el-select(
                         v-model="form_task_setup.wlans"
                         placeholder="选择要连接的无线网络"
@@ -129,31 +129,45 @@
                             :title="`${wlan._SSID}.${wlan.BSS._BSSID}`"
                         )
             .section.connection-interval
-               .head
+               .label
                     |连接间隔（秒）
                     el-tooltip(
                         content="在下一个连接请求就绪（上次连接已回报，新连接配置已就绪）后发起连接的间隔"
                         placement="top"
                     )
                         IconInfo.hint(size="14px")
-               .body
+               .content
                     el-input-number(
                         v-model="form_task_setup.connection_interval"
                         :min="0"
                         :max="10"
                     )
-            .section.random-mac
-                .head
-                    |使用随机 MAC 地址
+            .section.max-retries
+               .label
+                    |最大重试次数
                     el-tooltip(
-                        content="向目标 WiFi 暴露随机的本机 MAC 地址"
+                        content="连接请求不成功时允许的最大重试次数"
                         placement="top"
                     )
                         IconInfo.hint(size="14px")
-                .body
+               .content
+                    el-input-number(
+                        v-model="form_task_setup.max_retries"
+                        :min="0"
+                        :max="100"
+                    )
+            .section.random-mac
+                .label
+                    |随机 MAC 地址
+                    el-tooltip(
+                        content="是否向目标 WiFi 暴露随机的本机 MAC 地址"
+                        placement="top"
+                    )
+                        IconInfo.hint(size="14px")
+                .content
                     el-switch(
                         v-model="form_task_setup.random_mac"
-                        title="随机MAC地址"
+                        title="随机 MAC 地址"
                     )
             .section.confirm
                 el-button(
@@ -198,6 +212,7 @@ const form_task_setup = reactive({
     wlans: [] as string[],
     connection_interval: 1,
     random_mac: false,
+    max_retries: 100,
 })
 
 const wlan_card_nav_at = toRef(store_Tasks, 'wlan_card_nav_at')
@@ -280,6 +295,7 @@ function createTask()
                 custom_strategies: custom_strategies_normalized,
                 connection_interval: 1,
                 random_mac: false,
+                max_retries: form_task_setup.max_retries,
             },
             wlan_info: JSON.stringify(dict_wlan[wlan]),
         })
@@ -317,6 +333,7 @@ watch(if_render_create_task_modal, (new_val) => {
             wlans: [],
             connection_interval: 1,
             random_mac: false,
+            max_retries: 100,
         })
         current_scanned_wlans.value = []
     }
@@ -465,21 +482,27 @@ $root = '#view-tasks'
     .modal-content
         display flex
         flex-direction column
-        row-gap 16px
+        row-gap 8px
         >.section
-            >.head
+            display flex
+            align-items center
+            height 32px
+            >.label
                 display flex
                 align-items center
                 font-size 12px
-                height 16px
-                margin-bottom 8px
+                height 32px
+                // margin-bottom 8px
+                min-width 120px
                 color $black40
                 .hint
                     margin-left 4px
-            >.body
+            >.content
                 display flex
                 flex-direction column
                 row-gap 8px
+                width 0px
+                flex-grow 1
         >.section.confirm
             width 100%
             >.el-button
