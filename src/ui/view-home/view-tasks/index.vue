@@ -485,14 +485,13 @@ $root = '#view-tasks'
         row-gap 8px
         >.section
             display flex
-            align-items center
-            height 32px
+            align-items flex-start
+            min-height 32px
             >.label
                 display flex
                 align-items center
                 font-size 12px
-                height 32px
-                // margin-bottom 8px
+                line-height 32px
                 min-width 120px
                 color $black40
                 .hint
