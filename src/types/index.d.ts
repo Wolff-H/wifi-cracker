@@ -137,7 +137,7 @@ declare namespace WC
             total: number
             /** 已迭代完毕的阶段（策略）数。 */
             stage: number
-            /** 迭代详情。cursor 是最新已执行完毕的迭代。如果 cursor 等同于 total，则说明该策略已迭代完。 */
+            /** 迭代组详情。对于一个组，cursor 是最新已执行完毕的迭代。如果 cursor 等同于 total，则说明该组策略已迭代完。 */
             iteration_groups: [strategy: string, cursor: number, total: number][]
         }
         setup:
