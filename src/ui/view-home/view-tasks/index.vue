@@ -228,10 +228,10 @@ const wlan_crads_options = computed(() => {
 
 const tasks_running_in_view = computed(() => {
     return store_Tasks.uncompleted[wlan_card_nav_at.value]?.map((task) => {
-        // const iterations_consumed = Object.values(task.iterations.progress).map(([i, _]) => i).reduce((a, b) => a + b, 0)
+        // const iterations_consumed = Object.values(task.iteration_groups.progress).map(([i, _]) => i).reduce((a, b) => a + b, 0)
         let iterations_consumed = 0
 
-        for (const [_, cursor, subtotal] of task.progress.iterations)
+        for (const [_, cursor, subtotal] of task.progress.iteration_groups)
         {
             if (cursor === subtotal)
             {

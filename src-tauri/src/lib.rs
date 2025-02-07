@@ -18,6 +18,7 @@ pub fn run() {
             logic::get_computer_info::get_computer_info,
             logic::scan_wifi::scan_wifi,
             logic::read_passwordbook::read_passwordbook,
+            logic::create_wlan_profile::create_wlan_profile,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -120,7 +120,7 @@ declare namespace WC
         // /** 总迭代数 */
         // iterations_total: number
         /** 策略的迭代进度。 */
-        // iterations:
+        // iteration_groups:
         // {
         //     total: number
         //     // progress: Partial<Record<WC.CrackStrategy, [cursor: number, total: number]>>
@@ -138,7 +138,7 @@ declare namespace WC
             /** 已迭代完毕的阶段（策略）数。 */
             stage: number
             /** 迭代详情。cursor 是最新已执行完毕的迭代。如果 cursor 等同于 total，则说明该策略已迭代完。 */
-            iterations: [strategy: string, cursor: number, total: number][]
+            iteration_groups: [strategy: string, cursor: number, total: number][]
         }
         setup:
         {

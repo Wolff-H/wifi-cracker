@@ -10,7 +10,7 @@ export default class CrackTask implements WC.CrackTask
     {
         failures: [],
     }
-    // iterations: WC.CrackTask["iterations"] =
+    // iteration_groups: WC.CrackTask["iteration_groups"] =
     // {
     //     total: 0,
     //     progress: [],
@@ -19,7 +19,7 @@ export default class CrackTask implements WC.CrackTask
     {
         total: 0,
         stage: 0,
-        iterations: [],
+        iteration_groups: [],
     }
     setup: WC.CrackTask["setup"] =
     {
@@ -66,7 +66,7 @@ function constructProgress(strategies: WC.CrackStrategy[], custom_strategies: st
     {
         total: 0,
         stage: 0,
-        iterations: [],
+        iteration_groups: [],
     }
 
     for (const strategy of strategies)
@@ -74,19 +74,19 @@ function constructProgress(strategies: WC.CrackStrategy[], custom_strategies: st
         switch (strategy)
         {
             case 'passwordbook':
-                progress.iterations.push([strategy, 0, store.passwordbook_list.length])
+                progress.iteration_groups.push([strategy, 0, store.passwordbook_list.length])
                 break
             case 'digits_8':
-                progress.iterations.push([strategy, 0, 10 ** 8])
+                progress.iteration_groups.push([strategy, 0, 10 ** 8])
                 break
             case 'digits_9':
-                progress.iterations.push([strategy, 0, 10 ** 9])
+                progress.iteration_groups.push([strategy, 0, 10 ** 9])
                 break
             case 'digits_10':
-                progress.iterations.push([strategy, 0, 10 ** 10])
+                progress.iteration_groups.push([strategy, 0, 10 ** 10])
                 break
             case 'phone_number':
-                progress.iterations.push([strategy, 0, 26 * 10 ** 8])
+                progress.iteration_groups.push([strategy, 0, 26 * 10 ** 8])
                 break
             // TODO 自定义策略
             default:
@@ -94,7 +94,7 @@ function constructProgress(strategies: WC.CrackStrategy[], custom_strategies: st
         }
     }
 
-    progress.total = _.sum(progress.iterations.map((iteration) => iteration[2]))
+    progress.total = _.sum(progress.iteration_groups.map((iteration) => iteration[2]))
 
     return progress
 }

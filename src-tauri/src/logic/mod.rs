@@ -4,3 +4,4 @@ pub mod greet2;
 pub mod get_computer_info;
 pub mod scan_wifi;
 pub mod read_passwordbook;
+pub mod create_wlan_profile;

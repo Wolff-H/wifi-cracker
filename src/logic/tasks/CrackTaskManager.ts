@@ -108,10 +108,11 @@ class WlanCardCrackTaskManager
         // const _index = index ?? queue_task.findIndex((task) => (task.id === task.id))
         // ;[queue_task[_index], queue_task[0]] = [queue_task[0], queue_task[_index]]
 
-        return;
+        // return;
         // 开始执行任务 //
         const wlan_info = JSON.parse(task.wlan_info) as WC.WlanSSInfoNormalized
         const profile_path = await invoke('create_wlan_profile', {
+            name: wlan_info._SSID,
             content: composeWlanProfile({
                 ssid: wlan_info._SSID,
                 authentication: wlan_info.Authentication,
@@ -123,49 +124,49 @@ class WlanCardCrackTaskManager
             profile_path: profile_path,
         })
 
-        this.running_task_timer = window.setTimeout(async () => {
-            // TODO 将这个回调函数封装掉。
+        // this.running_task_timer = window.setTimeout(async () => {
+        //     /**
+        //      * 检查是否已完成全部迭代。
+        //      * 已完成则标记任务为完成，执行完成逻辑：
+        //      *     修改任务状态。
+        //      *     将任务移入已完成队列。
+        //      *     清理任务相关（profile 文件，profile 注册）。
+        //      *     开始下一个任务（如果有）。
+        //      * 未完成则继续下方逻辑。
+        //      */
 
-            /**
-             * 检查是否已完成全部迭代。
-             * 已完成则标记任务为完成，执行完成逻辑：
-             *     修改任务状态。
-             *     将任务移入已完成队列。
-             *     清理任务相关（profile 文件，profile 注册）。
-             *     开始下一个任务（如果有）。
-             * 未完成则继续下方逻辑。
-             */
+        //     /**
+        //      * 按任务记录的进度向 profile 改写密码。
+        //      */
 
-            /**
-             * 按任务记录的进度向 profile 改写密码。
-             */
+        //     // 连接 WLAN //
+        //     await invoke('connect_wlan', {
+        //         profile_name: wlan_info._SSID,
+        //         wlan_card: this.wlan_card,
+        //     })
 
-            // 连接 WLAN //
-            await invoke('connect_wlan', {
-                profile_name: wlan_info._SSID,
-                wlan_card: this.wlan_card,
-            })
+        //     /**
+        //      * 如果请求失败，更新 timer，注册一个新的回调执行。
+        //      *     不推进进度。
+        //      *     更新任务的累计请求失败日志。
+        //      */
 
-            /**
-             * 如果请求失败，更新 timer，注册一个新的回调执行。
-             *     不推进进度。
-             *     更新任务的累计请求失败日志。
-             */
+        //     /**
+        //      * 在给定的等待时间后，检查是否连接成功。
+        //      *     检查网卡连接状态以确定是否连接成功。
+        //      */
 
-            /**
-             * 在给定的等待时间后，检查是否连接成功。
-             *     检查网卡连接状态以确定是否连接成功。
-             */
+        //     /**
+        //      * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
+        //      */
 
-            /**
-             * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
-             */
-
-            /**
-             * 如果连接失败，更新 timer，注册一个新的回调执行。
-             */
+        //     /**
+        //      * 如果连接失败，更新 timer，注册一个新的回调执行。
+        //      */
             
-        }, task.setup.connection_interval * 1000)
+        // }, task.setup.connection_interval * 1000)
+
+        this.running_task_timer = window.setTimeout(this.iterateAttempt, task.setup.connection_interval * 1000, task)
     }
 
     pause(task: WC.CrackTask): void
@@ -182,9 +183,60 @@ class WlanCardCrackTaskManager
 
         task.status = 'pending'
     }
+
+    async iterateAttempt(task: WC.CrackTask)
+    {
+        /**
+         * 检查是否已完成全部迭代。
+         * 已完成则标记任务为完成，执行完成逻辑：
+         *     修改任务状态。
+         *     将任务移入已完成队列。
+         *     清理任务相关（profile 文件，profile 注册）。
+         *     开始下一个任务（如果有）。
+         * 未完成则继续下方逻辑。
+         */
+        const { progress } = task
+
+        // if ()
+
+        /**
+         * 按任务记录的进度向 profile 改写密码。
+         */
+
+        // 连接 WLAN //
+        await invoke('connect_wlan', {
+            profile_name: task.ssid,
+            wlan_card: task.setup.device,
+        })
+
+        /**
+         * 如果请求失败，更新 timer，注册一个新的回调执行。
+         *     不推进进度。
+         *     更新任务的累计请求失败日志。
+         */
+
+        /**
+         * 在给定的等待时间后，检查是否连接成功。
+         *     检查网卡连接状态以确定是否连接成功。
+         */
+
+        /**
+         * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
+         */
+
+        /**
+         * 如果连接失败，更新 timer，注册一个新的回调执行。
+         */
+    }
+
 }
 
 export default new CrackTaskManager()
+
+
+
+
+
 
 
 
