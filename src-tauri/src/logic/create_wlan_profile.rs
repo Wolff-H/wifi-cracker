@@ -9,7 +9,7 @@ pub fn create_wlan_profile(wlan_card: String, name: String, content: String) -> 
         .join(wlan_card);
 
     // 在 WLAN 配置文件目录生成 WLAN 配置文件 //
-    let path_wlan_profile = path_wlan_profiles.join(name);
+    let path_wlan_profile = path_wlan_profiles.join(format!("{}.xml", name));
     if !path_wlan_profiles.exists() { std::fs::create_dir_all(&path_wlan_profiles).expect("Failed to create directory"); }
     std::fs::write(&path_wlan_profile, content).expect("Failed to write file");
 
