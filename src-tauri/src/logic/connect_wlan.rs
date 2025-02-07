@@ -4,6 +4,7 @@ use crate::utils::run_command::run_command;
 
 
 #[tauri::command(rename_all = "snake_case")]
+// #[logcall::logcall]
 pub fn connect_wlan(wlan_card: String, profile_name: String) -> Result<(), InvokeError>
 {
     let output = run_command(&format!("netsh wlan connect name=\"{}\" interface=\"{}\"", profile_name, wlan_card))

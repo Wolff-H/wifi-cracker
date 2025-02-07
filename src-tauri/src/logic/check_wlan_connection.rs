@@ -2,6 +2,7 @@ use tauri::ipc::InvokeError;
 use crate::utils::run_command::run_command;
 
 #[tauri::command(rename_all = "snake_case")]
+// #[logcall::logcall]
 pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<(), InvokeError>
 {
     let output = run_command("netsh wlan show interfaces")

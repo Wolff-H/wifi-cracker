@@ -1,6 +1,7 @@
 use tauri::ipc::InvokeError;
 
 #[tauri::command(rename_all = "snake_case")]
+// #[logcall::logcall]
 pub fn create_wlan_profile(wlan_card: String, name: String, content: String) -> Result<String, InvokeError>
 {
     let path_wlan_profiles = std::env::current_dir().expect("Failed to get current directory")
