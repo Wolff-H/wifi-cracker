@@ -9,7 +9,10 @@ declare namespace Commands
         create_wlan_profile: [{ name: string, content: string }, string]
         add_wlan_profile_registration: [{ profile_path: string }, void]
         remove_wlan_profile_registration: [{ profile_name: string }, void]
+        delete_wlan_profile: [{ name: string }, string]
+        rewrite_wlan_profile_password: [{ profile_name: string, password: string }, void]
         connect_wlan: [{ profile_name: string, wlan_card: string }, void]
+        check_wlan_connection: [{ wlan_card: string }, boolean]
     }
 }
 

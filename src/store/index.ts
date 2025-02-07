@@ -18,7 +18,7 @@ const useStore = defineStore('/', {
     {
         passwordbook_list(): string[]
         {
-            return this.passwordbook.split('\n')
+            return markRaw(this.passwordbook.split('\n'))
         },
     },
 })

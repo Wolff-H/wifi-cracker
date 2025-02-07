@@ -166,7 +166,9 @@ class WlanCardCrackTaskManager
             
         // }, task.setup.connection_interval * 1000)
 
-        this.running_task_timer = window.setTimeout(this.iterateAttempt, task.setup.connection_interval * 1000, task)
+        // this.running_task_timer = window.setTimeout(this.iterateAttempt, 0, task)
+
+        this.iterateAttempt(task)
     }
 
     pause(task: WC.CrackTask): void
@@ -197,38 +199,108 @@ class WlanCardCrackTaskManager
          */
         const { progress } = task
 
-        // if ()
+        const last_iteration_group = progress.iteration_groups.at(-1)!
+        const [_, last_cursor, last_total] = last_iteration_group
+
+        if (last_cursor === last_total)
+        {
+            task.status = 'completed'
+
+            store_Tasks.completed.push(task)
+            store_Tasks.uncompleted[this.wlan_card] = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
+
+            await invoke('remove_wlan_profile_registration', {
+                profile_name: task.ssid,
+            })
+
+            await invoke('delete_wlan_profile', {
+                name: task.ssid,
+            })
+
+            this.start()
+            return
+        }
 
         /**
          * 按任务记录的进度向 profile 改写密码。
          */
+        const [strategy, cursor] = progress.iteration_groups[progress.stage]
 
-        // 连接 WLAN //
-        await invoke('connect_wlan', {
+        let password = ''
+
+        try {
+            password = getIterationPassword(strategy, cursor)
+        } catch (error) {
+            console.error(error)
+            return
+        }
+
+        await invoke('rewrite_wlan_profile_password', {
             profile_name: task.ssid,
-            wlan_card: task.setup.device,
+            password: password,
         })
 
         /**
-         * 如果请求失败，更新 timer，注册一个新的回调执行。
-         *     不推进进度。
-         *     更新任务的累计请求失败日志。
+         * 连接 WLAN。
          */
+        try {
+            await invoke('connect_wlan', {
+                profile_name: task.ssid,
+                wlan_card: task.setup.device,
+            })
+        } catch (error) {
+            /**
+             * 如果请求失败，更新 timer，注册一个新的回调执行。
+             *     不推进进度。
+             *     更新任务的累计请求失败日志。
+             */
+
+            task.log.failures.push([Date.now(), String(error)])
+
+            // this.running_task_timer = window.setTimeout(this.iterateAttempt, 0, task)
+
+            this.iterateAttempt(task)
+
+            return
+        }
 
         /**
          * 在给定的等待时间后，检查是否连接成功。
          *     检查网卡连接状态以确定是否连接成功。
          */
+        window.setTimeout(async () => {
+            const if_connected = await invoke ('check_wlan_connection', {
+                wlan_card: task.setup.device, 
+            })
 
-        /**
-         * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
-         */
+            /**
+             * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
+             *     执行任务完成清理逻辑。
+             */
+            if (if_connected)
+            {
+                task.status = 'completed'
 
-        /**
-         * 如果连接失败，更新 timer，注册一个新的回调执行。
-         */
+                store_Tasks.completed.push(task)
+                store_Tasks.uncompleted[this.wlan_card] = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
+
+                await invoke('remove_wlan_profile_registration', {
+                    profile_name: task.ssid,
+                })
+    
+                await invoke('delete_wlan_profile', {
+                    name: task.ssid,
+                })
+            }
+            /**
+             * 如果连接失败，更新 timer，注册一个新的回调执行。
+             */
+            else
+            {
+                this.iterateAttempt(task)
+            }
+        }, task.setup.connection_interval * 1000)
     }
-
 }
 
 export default new CrackTaskManager()
@@ -245,7 +317,12 @@ export default new CrackTaskManager()
 /**
  * 获取当次迭代的密码。
  */
-function getIterationPassword(strategy: WC.CrackStrategy | string[], cursor: number)
+function getIterationPassword(strategy: WC.CrackStrategy, cursor: number)
 {
+    if (strategy === 'passwordbook')
+    {
+        return store.passwordbook_list[cursor]
+    }
 
+    throw new Error('Unsupported strategy.')
 }
