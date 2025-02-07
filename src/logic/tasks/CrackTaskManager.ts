@@ -112,6 +112,7 @@ class WlanCardCrackTaskManager
         // 开始执行任务 //
         const wlan_info = JSON.parse(task.wlan_info) as WC.WlanSSInfoNormalized
         const profile_path = await invoke('create_wlan_profile', {
+            wlan_card: this.wlan_card,
             name: wlan_info._SSID,
             content: composeWlanProfile({
                 ssid: wlan_info._SSID,
@@ -121,52 +122,9 @@ class WlanCardCrackTaskManager
         })
 
         await invoke('add_wlan_profile_registration', {
+            wlan_card: this.wlan_card,
             profile_path: profile_path,
         })
-
-        // this.running_task_timer = window.setTimeout(async () => {
-        //     /**
-        //      * 检查是否已完成全部迭代。
-        //      * 已完成则标记任务为完成，执行完成逻辑：
-        //      *     修改任务状态。
-        //      *     将任务移入已完成队列。
-        //      *     清理任务相关（profile 文件，profile 注册）。
-        //      *     开始下一个任务（如果有）。
-        //      * 未完成则继续下方逻辑。
-        //      */
-
-        //     /**
-        //      * 按任务记录的进度向 profile 改写密码。
-        //      */
-
-        //     // 连接 WLAN //
-        //     await invoke('connect_wlan', {
-        //         profile_name: wlan_info._SSID,
-        //         wlan_card: this.wlan_card,
-        //     })
-
-        //     /**
-        //      * 如果请求失败，更新 timer，注册一个新的回调执行。
-        //      *     不推进进度。
-        //      *     更新任务的累计请求失败日志。
-        //      */
-
-        //     /**
-        //      * 在给定的等待时间后，检查是否连接成功。
-        //      *     检查网卡连接状态以确定是否连接成功。
-        //      */
-
-        //     /**
-        //      * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
-        //      */
-
-        //     /**
-        //      * 如果连接失败，更新 timer，注册一个新的回调执行。
-        //      */
-            
-        // }, task.setup.connection_interval * 1000)
-
-        // this.running_task_timer = window.setTimeout(this.iterateAttempt, 0, task)
 
         this.iterateAttempt(task)
     }
@@ -183,7 +141,16 @@ class WlanCardCrackTaskManager
         else if (typeof arg1 ==='number') task = queue_task[arg1]
         else task = arg1
 
+        /**
+         * 修改任务状态。
+         * 取消下一次的推进迭代的回调执行。
+         */
         task.status = 'pending'
+
+        if (this.running_task_timer)
+        {
+            clearTimeout(this.running_task_timer)
+        }
     }
 
     async iterateAttempt(task: WC.CrackTask)
@@ -210,10 +177,12 @@ class WlanCardCrackTaskManager
             store_Tasks.uncompleted[this.wlan_card] = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
 
             await invoke('remove_wlan_profile_registration', {
+                wlan_card: this.wlan_card,
                 profile_name: task.ssid,
             })
 
             await invoke('delete_wlan_profile', {
+                wlan_card: this.wlan_card,
                 name: task.ssid,
             })
 
@@ -236,6 +205,7 @@ class WlanCardCrackTaskManager
         }
 
         await invoke('rewrite_wlan_profile_password', {
+            wlan_card: this.wlan_card,
             profile_name: task.ssid,
             password: password,
         })
@@ -254,10 +224,7 @@ class WlanCardCrackTaskManager
              *     不推进进度。
              *     更新任务的累计请求失败日志。
              */
-
             task.log.failures.push([Date.now(), String(error)])
-
-            // this.running_task_timer = window.setTimeout(this.iterateAttempt, 0, task)
 
             this.iterateAttempt(task)
 
@@ -268,10 +235,18 @@ class WlanCardCrackTaskManager
          * 在给定的等待时间后，检查是否连接成功。
          *     检查网卡连接状态以确定是否连接成功。
          */
-        window.setTimeout(async () => {
+        this.running_task_timer = window.setTimeout(async () => {
             const if_connected = await invoke ('check_wlan_connection', {
-                wlan_card: task.setup.device, 
+                wlan_card: task.setup.device,
+                ssid: task.ssid,
             })
+
+            /**
+             * 连接成功且可以确定此次尝试的结果，推进进度。
+             */
+            progress.iteration_groups[progress.stage][1]++
+            const [_, cursor, total] = progress.iteration_groups[progress.stage]
+            if (cursor === total) progress.stage++
 
             /**
              * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
@@ -285,10 +260,12 @@ class WlanCardCrackTaskManager
                 store_Tasks.uncompleted[this.wlan_card] = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
 
                 await invoke('remove_wlan_profile_registration', {
+                    wlan_card: this.wlan_card,
                     profile_name: task.ssid,
                 })
     
                 await invoke('delete_wlan_profile', {
+                    wlan_card: this.wlan_card,
                     name: task.ssid,
                 })
             }
