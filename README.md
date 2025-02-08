@@ -49,9 +49,10 @@ Tauri 编译所需的环境。
 - [x] Device nifo.
 - [x] WiFi scan.
 - [ ] WiFi scan statistics.
-- [ ] Task scheduling.
-- [ ] WiFi cracking.
+- [x] Task scheduling.
+- [x] WiFi cracking.
 - [ ] WiFi cracking output.
+- [ ] App data persistency.
 
 ## references
 
