@@ -72,9 +72,11 @@ app.use(createPinia())    // 准备 pinia 状态库实例（任何 pinia 实例�
 export const store_Device = stores.useStore_Device()
 export const store = stores.useStore()
 export const store_Scan = stores.useStore_Scan()
+export const store_Tasks = stores.useStore_Tasks()
 app.config.globalProperties['store_Device'] = store_Device
 app.config.globalProperties['store'] = store
 app.config.globalProperties['store_Scan'] = store_Scan
+app.config.globalProperties['store_Tasks'] = store_Tasks
 /// </store-auto-imports>
 
 app

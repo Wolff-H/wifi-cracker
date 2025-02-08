@@ -49,9 +49,10 @@ Tauri 编译所需的环境。
 - [x] Device nifo.
 - [x] WiFi scan.
 - [ ] WiFi scan statistics.
-- [ ] Task scheduling.
-- [ ] WiFi cracking.
+- [x] Task scheduling.
+- [x] WiFi cracking.
 - [ ] WiFi cracking output.
+- [ ] App data persistency.
 
 ## references
 
@@ -60,3 +61,5 @@ Tauri 编译所需的环境。
 - [crates.io](https://crates.io/)
 - [Windows-RS Docs](https://microsoft.github.io/windows-docs-rs/doc/windows/)
 - [Windows Wlan Commands API](https://learn.microsoft.com/zh-cn/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)#netsh-wlan-commands)
+- [Windows Wlan Profile](https://learn.microsoft.com/en-us/uwp/schemas/mobilebroadbandschema/wlan/element-wlanprofile)
+- [Top 200 Most Common Passwords](https://nordpass.com/most-common-passwords-list/)

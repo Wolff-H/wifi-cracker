@@ -58,6 +58,7 @@ declare global {
   const store: typeof import('@/main')['store']
   const store_Device: typeof import('@/main')['store_Device']
   const store_Scan: typeof import('@/main')['store_Scan']
+  const store_Tasks: typeof import('@/main')['store_Tasks']
   const store_device: typeof import('@/main')['store_device']
   const toRaw: typeof import('vue')['toRaw']
   const toRef: typeof import('vue')['toRef']

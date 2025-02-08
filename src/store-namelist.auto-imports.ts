@@ -2,5 +2,6 @@
 export default [
     "store_Device",
     "store",
-    "store_Scan"
+    "store_Scan",
+    "store_Tasks"
 ]

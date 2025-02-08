@@ -1,4 +1,5 @@
 use std::process::Command;
+use crate::utils::get_data_directory::get_data_directory;
 
 
 
@@ -14,4 +15,11 @@ pub fn initialize() {
     let output = command.output().expect("Failed to set command line output format");
 
     println!("Normalized command settings: {:?}", output);
+
+    // 打印当前程序位置 //
+    let current_dir = std::env::current_dir().expect("Failed to get current directory");
+    println!("Current directory: {:?}", current_dir);
+
+    // 打印和初始化数据目录 //
+    println!("data directory: {}", get_data_directory().to_str().unwrap());
 }

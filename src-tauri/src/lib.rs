@@ -17,6 +17,14 @@ pub fn run() {
             logic::greet2::greet2,
             logic::get_computer_info::get_computer_info,
             logic::scan_wifi::scan_wifi,
+            logic::read_passwordbook::read_passwordbook,
+            logic::create_wlan_profile::create_wlan_profile,
+            logic::add_wlan_profile_registration::add_wlan_profile_registration,
+            logic::remove_wlan_profile_registration::remove_wlan_profile_registration,
+            logic::delete_wlan_profile::delete_wlan_profile,
+            logic::rewrite_wlan_profile_password::rewrite_wlan_profile_password,
+            logic::connect_wlan::connect_wlan,
+            logic::check_wlan_connection::check_wlan_connection,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -86,6 +86,7 @@
     "store_device": true,
     "store_Device": true,
     "store_Scan": true,
-    "dayjs": true
+    "dayjs": true,
+    "store_Tasks": true
   }
 }
