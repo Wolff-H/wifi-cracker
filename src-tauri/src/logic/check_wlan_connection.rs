@@ -3,7 +3,7 @@ use crate::utils::run_command::run_command;
 
 #[tauri::command(rename_all = "snake_case")]
 // #[logcall::logcall]
-pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<(), InvokeError>
+pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<bool, InvokeError>
 {
     let output = run_command("netsh wlan show interfaces")
         .map_err(|e| InvokeError::from(e.to_string()))?;
@@ -27,10 +27,6 @@ pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<(), Invo
         }
     }
 
-    // 如果找到的 State 的值为 connected 且 Profile 的值为 ssid，则返回 Ok(())，否则返回 Err(InvokeError) //
-    if (state, profile) == (Some("connected"), Some(&ssid)) {
-        Ok(())
-    } else {
-        Err(InvokeError::from("WLAN not connected"))
-    }
+    // 如果找到的 State 的值为 connected 且 Profile 的值为 ssid，则返回 true，否则返回 false //
+    Ok(state == Some("connected") && profile == Some(&ssid))
 }

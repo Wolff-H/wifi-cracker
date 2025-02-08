@@ -126,7 +126,9 @@ class WlanCardCrackTaskManager
             profile_path: profile_path,
         })
 
-        this.iterateAttempt(task)
+        this.running_task_timer = window.setTimeout(() => {
+            this.iterateAttempt(task)
+        }, 0)
     }
 
     pause(task: WC.CrackTask): void
@@ -147,14 +149,16 @@ class WlanCardCrackTaskManager
          */
         task.status = 'pending'
 
-        if (this.running_task_timer)
+        if (this.running_task_timer !== undefined)
         {
-            clearTimeout(this.running_task_timer)
+            window.clearTimeout(this.running_task_timer)
+            this.running_task_timer = undefined
         }
     }
 
     async iterateAttempt(task: WC.CrackTask)
     {
+        console.log('iterateAttempt');
         /**
          * 检查是否已完成全部迭代。
          * 已完成则标记任务为完成，执行完成逻辑：
@@ -226,7 +230,11 @@ class WlanCardCrackTaskManager
              */
             task.log.failures.push([Date.now(), String(error)])
 
-            this.iterateAttempt(task)
+            console.log('请求失败 ', error);
+            
+            this.running_task_timer = window.setTimeout(() => {
+                this.iterateAttempt(task)
+            }, 0)
 
             return
         }

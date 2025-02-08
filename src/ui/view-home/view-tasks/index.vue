@@ -13,7 +13,7 @@
             @click="menu_at = 'uncompleted'"
         )
             IconSignalOne(size="14px").icon
-            .title
+            .title(@click="test")
                 |待完成
         .menu-item.completed(
             :class="{ 'o-active': menu_at === 'completed' }"
@@ -48,6 +48,8 @@
                                 |{{ task._progress.percentage }} % ( {{ task._progress.combinations_consumption.join(' / ') }} )
                             .estimated-time(title="估计剩余用时")
                                 |00:00:00
+                        .log(:title="JSON.stringify(task.log, undefined, 4)")
+                            |Log
                     .main-action
                         IconPlayOne.action.run(
                             v-if="task.status === 'pending'"
@@ -197,6 +199,15 @@ import crack_task_manager from "@/logic/tasks/CrackTaskManager"
 
 defineOptions({ name: 'view-tasks' })
 
+async function test()
+{
+    await invoke('rewrite_wlan_profile_password', {
+        wlan_card: 'WLAN',
+        profile_name: 'CU_601',
+        password: '1234567890',
+    })
+}
+
 const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
 const current_scanned_wlans = ref<any[]>([])
@@ -293,7 +304,7 @@ function createTask()
                 device: form_task_setup.device,
                 strategies: form_task_setup.strategies,
                 custom_strategies: custom_strategies_normalized,
-                connection_interval: 1,
+                connection_interval: form_task_setup.connection_interval,
                 random_mac: false,
                 max_retries: form_task_setup.max_retries,
             },
@@ -431,6 +442,7 @@ $root = '#view-tasks'
                         width 0px
                         flex-grow 1
                         row-gap 8px
+                        position relative
                         >.title
                             font-size 14px
                             line-height 14px
@@ -450,6 +462,13 @@ $root = '#view-tasks'
                                 //
                            .combinations-consumption
                                 // 
+                        >.log
+                            display none
+                            font-size 12px
+                            color $black40
+                            position absolute
+                            top 0px
+                            right 0px
                     .main-action
                         height calc(100% - 16px)
                         aspect-ratio 1
@@ -478,6 +497,8 @@ $root = '#view-tasks'
                         background-color $shadow03
                         & .delete-button
                             display flex
+                        & .log
+                            display block
 .modal.view-tasks_create-task
     .modal-content
         display flex

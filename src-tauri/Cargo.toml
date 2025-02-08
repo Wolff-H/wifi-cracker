@@ -27,6 +27,7 @@ sysinfo = "0.33.1"
 shlex = "1.3.0"
 logcall = "0.1.11"
 log = "0.4.25"
+regex = "1.11.1"
 
 # [dependencies.windows]
 # version = "0.59.0"

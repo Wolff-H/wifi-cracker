@@ -45,7 +45,7 @@ export default class CrackTask implements WC.CrackTask
         Object.assign(this, {
             ssid: task.ssid || '',
             status: task.status || 'pending',
-            log: task.log,
+            log: task.log || { failures: [] },
             setup: task.setup,
             result: task.result,
             wlan_info: task.wlan_info || '',

@@ -4506,6 +4506,7 @@ dependencies = [
  "chrono",
  "log",
  "logcall",
+ "regex",
  "serde",
  "serde_json",
  "shlex",

@@ -1,4 +1,5 @@
 use std::process::Command;
+use crate::utils::get_data_directory::get_data_directory;
 
 
 
@@ -19,17 +20,6 @@ pub fn initialize() {
     let current_dir = std::env::current_dir().expect("Failed to get current directory");
     println!("Current directory: {:?}", current_dir);
 
-    // 在程序当前位置生成数据目录 //
-    let path = current_dir.join("wc-data");
-    if !path.exists() {
-        std::fs::create_dir(&path).expect("Failed to create directory");
-    }
-    let path_wlan_profiles = path.join("wlan-profiles");
-    if !path_wlan_profiles.exists() {
-        std::fs::create_dir(&path_wlan_profiles).expect("Failed to create directory");
-    }
-    let path_passwordbook = path.join("passwordbook.txt");
-    if !path_passwordbook.exists() {
-        std::fs::File::create(&path_passwordbook).expect("Failed to create file");
-    }
+    // 打印和初始化数据目录 //
+    println!("data directory: {}", get_data_directory().to_str().unwrap());
 }
