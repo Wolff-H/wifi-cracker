@@ -127,15 +127,6 @@ class WlanCardCrackTaskManager
 
         this.profile_path = profile_path
 
-        // await invoke('add_wlan_profile_registration', {
-        //     wlan_card: this.wlan_card,
-        //     profile_path: profile_path,
-        // })
-
-        // this.running_task_timer = window.setTimeout(() => {
-        //     this.iterateAttempt(task)
-        // }, 0)
-
         this.iterateAttempt(task)
     }
 
@@ -207,14 +198,18 @@ class WlanCardCrackTaskManager
             this.profile_path = ''
 
             this.start()
+
             return
         }
 
         /**
-         * 按任务记录的进度向 profile 改写密码。
+         * 获取当前进度。
          */
         const [strategy, cursor, total] = progress.iteration_groups[progress.stage]
 
+        /**
+         * 按任务记录的进度向 profile 改写密码。
+         */
         let password = ''
 
         try {
@@ -223,9 +218,6 @@ class WlanCardCrackTaskManager
             console.error(error)
             return
         }
-
-        console.log('rewrite_wlan_profile_password.password :' , password);
-        
 
         await invoke('rewrite_wlan_profile_password', {
             wlan_card: this.wlan_card,
@@ -248,17 +240,13 @@ class WlanCardCrackTaskManager
             })
         } catch (error) {
             /**
-             * 如果请求失败，更新 timer，注册一个新的回调执行。
+             * 如果网络请求失败。
+             *     记录失败日志。
              *     不推进进度。
-             *     更新任务的累计请求失败日志。
+             *     执行一个新的迭代尝试。
+             *     结束本次迭代尝试。
              */
             task.log.failures.push([Date.now(), String(error)])
-
-            console.log('请求失败 ', error);
-            
-            // this.running_task_timer = window.setTimeout(() => {
-            //     this.iterateAttempt(task)
-            // }, 0)
 
             if (task.status === 'running') this.iterateAttempt(task)
 
@@ -282,19 +270,18 @@ class WlanCardCrackTaskManager
                 resolve(if_connected)
             }, task.setup.connection_interval * 1000)
         })
-        
-        console.log('checked_connection_status :', checked_connection_status);
 
         /**
          * 连接成功且可以确定此次尝试的结果，推进进度。
          */
         progress.iteration_groups[progress.stage][1]++
-        // const [_, cursor, total] = progress.iteration_groups[progress.stage]
         if (cursor === total) progress.stage++
 
         /**
-         * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
-         *     执行任务完成清理逻辑。
+         * 如果连接成功，执行任务完成清理逻辑。
+         *     标记任务为完成。
+         *     记录密码。
+         *     将任务移入已完成队列。
          */
         if (checked_connection_status)
         {
@@ -316,56 +303,12 @@ class WlanCardCrackTaskManager
             this.profile_path = ''
         }
         /**
-         * 如果连接失败，更新 timer，注册一个新的回调执行。
+         * 如果连接失败，执行一个新的迭代尝试。
          */
         else
         {
             if (task.status === 'running') this.iterateAttempt(task)
         }
-
-
-        // this.running_task_timer = window.setTimeout(async () => {
-        //     const if_connected = await invoke ('check_wlan_connection', {
-        //         wlan_card: task.setup.device,
-        //         ssid: task.ssid,
-        //     })
-
-        //     /**
-        //      * 连接成功且可以确定此次尝试的结果，推进进度。
-        //      */
-        //     progress.iteration_groups[progress.stage][1]++
-        //     const [_, cursor, total] = progress.iteration_groups[progress.stage]
-        //     if (cursor === total) progress.stage++
-
-        //     /**
-        //      * 如果连接成功，记录密码并标记任务为完成，将任务移入已完成队列。
-        //      *     执行任务完成清理逻辑。
-        //      */
-        //     if (if_connected)
-        //     {
-        //         task.status = 'completed'
-
-        //         store_Tasks.completed.push(task)
-        //         store_Tasks.uncompleted[this.wlan_card] = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
-
-        //         await invoke('remove_wlan_profile_registration', {
-        //             wlan_card: this.wlan_card,
-        //             profile_name: task.ssid,
-        //         })
-    
-        //         await invoke('delete_wlan_profile', {
-        //             wlan_card: this.wlan_card,
-        //             name: task.ssid,
-        //         })
-        //     }
-        //     /**
-        //      * 如果连接失败，更新 timer，注册一个新的回调执行。
-        //      */
-        //     else
-        //     {
-        //         this.iterateAttempt(task)
-        //     }
-        // }, task.setup.connection_interval * 1000)
     }
 }
 
