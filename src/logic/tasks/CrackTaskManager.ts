@@ -163,7 +163,7 @@ class WlanCardCrackTaskManager
      */
     async iterateAttempt(task: WC.CrackTask)
     {
-        console.log('iterateAttempt');
+        // console.log('iterateAttempt');
         /**
          * 检查是否已完成全部迭代。
          * 已完成则标记任务为完成，执行完成逻辑：
@@ -278,7 +278,7 @@ class WlanCardCrackTaskManager
         if (cursor === total) progress.stage++
 
         /**
-         * 如果连接成功，执行任务完成清理逻辑。
+         * 如果尝试成功，执行任务完成清理逻辑。
          *     标记任务为完成。
          *     记录密码。
          *     将任务移入已完成队列。
@@ -301,9 +301,14 @@ class WlanCardCrackTaskManager
             })
 
             this.profile_path = ''
+
+            task.result = {
+                ctime: Date.now(),
+                password: password,
+            }
         }
         /**
-         * 如果连接失败，执行一个新的迭代尝试。
+         * 如果尝试失败，执行一个新的迭代尝试。
          */
         else
         {

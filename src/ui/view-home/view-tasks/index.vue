@@ -47,20 +47,27 @@
                             .combinations-consumption(title="尝试的组合数")
                                 |{{ task._progress.percentage }} % ( {{ task._progress.combinations_consumption.join(' / ') }} )
                             .estimated-time(title="估计剩余用时")
-                                |00:00:00
+                                |??:??:??
                         .log(:title="JSON.stringify(task.log, undefined, 4)")
                             |Log
                     .main-action
-                        IconPlayOne.action.run(
-                            v-if="task.status === 'pending'"
-                            size="24px"
-                            @click="runTask(index)"
-                        )
-                        IconPause.action.pause(
-                            v-else-if="task.status === 'running'"
-                            size="24px"
-                            @click="pauseTask(index)"
-                        )
+                        template(v-if="menu_at === 'uncompleted'")
+                            IconPlayOne.action.run(
+                                v-if="task.status === 'pending'"
+                                size="24px"
+                                @click="runTask(index)"
+                            )
+                            IconPause.action.pause(
+                                v-else-if="task.status === 'running'"
+                                size="24px"
+                                @click="pauseTask(index)"
+                            )
+                        template(v-else-if="menu_at === 'completed'")
+                            IconKeyTwo.action.password(
+                                v-if="task.result.password"
+                                size="24px"
+                                @click="copyPassword(index)"
+                            )
                     .delete-button(title="删除任务")
                         IconClose(size="12px")
     el-dialog.modal.view-tasks_create-task(
@@ -191,6 +198,7 @@ import {
     PlayOne as IconPlayOne,
     Close as IconClose,
     Pause as IconPause,
+    KeyTwo as IconKeyTwo,
 } from "@icon-park/vue-next"
 import { dict_password_strategy } from "@/constants"
 import { ElMessage } from "element-plus"
@@ -229,7 +237,12 @@ const wlan_crads_options = computed(() => {
 })
 
 const tasks_running_in_view = computed(() => {
-    return store_Tasks.uncompleted[wlan_card_nav_at.value]?.map((task) => {
+    const queue = menu_at.value === 'uncompleted' ?
+        (store_Tasks.uncompleted[wlan_card_nav_at.value] || []) // 在状态库未初始化网卡时，返回空数组
+        :
+        store_Tasks.completed
+
+    return queue.map((task) => {
         let iterations_consumed = 0
 
         for (const [_, cursor, subtotal] of task.progress.iteration_groups)
@@ -254,7 +267,7 @@ const tasks_running_in_view = computed(() => {
                 estimated_time: '00:00:00',
             },
         }
-    }) || [] // 在状态库未初始化网卡时，返回空数组
+    }) as (WC.CrackTask & { _progress: any })[]
 })
 
 function createTask()
@@ -322,6 +335,11 @@ function pauseTask(task_index: number)
     const crack_task_submanager = crack_task_manager.wlan_cards[wlan_card_nav_at.value]
 
     crack_task_submanager.pause(task_index)
+}
+
+function copyPassword(task_index: number)
+{
+    // TODO
 }
 
 watch(if_render_create_task_modal, (new_val) => {

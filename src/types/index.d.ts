@@ -154,7 +154,7 @@ declare namespace WC
         {
             ctime: number
             password: string
-        } | null
+        }
     }
 
     // interface WlanCrackTasksState

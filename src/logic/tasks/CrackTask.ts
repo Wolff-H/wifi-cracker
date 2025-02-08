@@ -37,7 +37,6 @@ export default class CrackTask implements WC.CrackTask
         password: '',
     }
     
-
     constructor(task: Partial<WC.CrackTask>)
     {
         this.id = task?.id || uuidv7()
@@ -45,9 +44,22 @@ export default class CrackTask implements WC.CrackTask
         Object.assign(this, {
             ssid: task.ssid || '',
             status: task.status || 'pending',
-            log: task.log || { failures: [] },
-            setup: task.setup,
-            result: task.result,
+            log: task.log || {
+                failures: [],
+            },
+            setup: task.setup || {
+                ctime: 0,
+                device: '',
+                strategies: [],
+                custom_strategies: [],
+                connection_interval: 1,
+                random_mac: false,
+                max_retries: 100,
+            },
+            result: task.result || {
+                ctime: 0,
+                password: ''
+            },
             wlan_info: task.wlan_info || '',
         })
 

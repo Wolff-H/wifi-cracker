@@ -8,7 +8,7 @@ pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<bool, In
     let output = run_command("netsh wlan show interfaces")
         .map_err(|e| InvokeError::from(e.to_string()))?;
 
-    println!("{}", &output);
+    // println!("{}", &output);
 
     // // 跳过输出内容的第一行和任何空行，将输出解析为键值对列表 //
     // let mut lines = output.lines().skip(1).filter(|line| !line.is_empty());
