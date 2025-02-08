@@ -5,11 +5,6 @@ use crate::utils::get_data_directory::get_data_directory;
 // #[logcall::logcall]
 pub fn create_wlan_profile(wlan_card: String, name: String, content: String) -> Result<String, InvokeError>
 {
-    // let path_wlan_profiles = std::env::current_dir().expect("Failed to get current directory")
-    //     .join("wc-data")
-    //     .join("wlan-profiles")
-    //     .join(wlan_card);
-
     let path_wlan_profiles = get_data_directory().join("wlan-profiles").join(wlan_card);
 
     // 在 WLAN 配置文件目录生成 WLAN 配置文件 //

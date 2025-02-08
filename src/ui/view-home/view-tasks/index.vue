@@ -13,7 +13,7 @@
             @click="menu_at = 'uncompleted'"
         )
             IconSignalOne(size="14px").icon
-            .title(@click="test")
+            .title
                 |待完成
         .menu-item.completed(
             :class="{ 'o-active': menu_at === 'completed' }"
@@ -198,15 +198,6 @@ import CrackTask from "@/logic/tasks/CrackTask"
 import crack_task_manager from "@/logic/tasks/CrackTaskManager"
 
 defineOptions({ name: 'view-tasks' })
-
-async function test()
-{
-    await invoke('rewrite_wlan_profile_password', {
-        wlan_card: 'WLAN',
-        profile_name: 'CU_601',
-        password: '1234567890',
-    })
-}
 
 const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
