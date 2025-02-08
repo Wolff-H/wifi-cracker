@@ -68,7 +68,10 @@
                                 size="24px"
                                 @click="copyPassword(index)"
                             )
-                    .delete-button(title="删除任务")
+                    .delete-button(
+                        title="删除任务"
+                        @click="deleteTask(index)"
+                    )
                         IconClose(size="12px")
     el-dialog.modal.view-tasks_create-task(
         v-model="if_render_create_task_modal"
@@ -335,6 +338,13 @@ function pauseTask(task_index: number)
     const crack_task_submanager = crack_task_manager.wlan_cards[wlan_card_nav_at.value]
 
     crack_task_submanager.pause(task_index)
+}
+
+function deleteTask(task_index: number)
+{
+    const crack_task_submanager = crack_task_manager.wlan_cards[wlan_card_nav_at.value]
+
+    crack_task_submanager.delete(menu_at.value, task_index)
 }
 
 function copyPassword(task_index: number)

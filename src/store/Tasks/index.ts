@@ -13,7 +13,7 @@ const useStore = defineStore('/Tasks', {
 type _S =
 {
     uncompleted: Record<string, WC.CrackTask[]>
-    completed: any[]
+    completed: WC.CrackTask[]
     wlan_card_nav_at: string
 }
 

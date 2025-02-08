@@ -156,6 +156,29 @@ class WlanCardCrackTaskManager
         }
     }
 
+    delete(queue_class: 'uncompleted' | 'completed', task: WC.CrackTask): void
+    delete(queue_class: 'uncompleted' | 'completed', task_id: string): void
+    delete(queue_class: 'uncompleted' | 'completed', task_index: number): void
+    delete(queue_class: 'uncompleted' | 'completed', arg1: WC.CrackTask | string | number)
+    {
+        let task: null | WC.CrackTask = null
+        const queue_task = {
+            'uncompleted': store_Tasks.uncompleted[this.wlan_card],
+            'completed': store_Tasks.completed,
+        }[queue_class]
+
+        if (typeof arg1 === 'string') task = queue_task.find((task) => (task.id === arg1))!
+        else if (typeof arg1 ==='number') task = queue_task[arg1]
+        else task = arg1
+
+        this.pause(task)
+
+        const task_index = queue_task.findIndex((item) => item.id === task.id)
+        queue_task.splice(task_index, 1)
+
+        // queue_task = store_Tasks.uncompleted[this.wlan_card].filter((_task) => (_task.id !== task.id))
+    }
+
     /**
      * 注意令迭代尝试只在当前任务为执行态时调用。
      * @param task 
