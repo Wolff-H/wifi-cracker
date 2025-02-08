@@ -360,6 +360,22 @@ function getIterationPassword(strategy: WC.CrackStrategy, cursor: number)
     {
         return store.passwordbook_list[cursor]
     }
+    else if (['digits_8', 'digits_9', 'digits_10'].includes(strategy))
+    {
+        const order = Number(strategy.replace('digits_', '')) - 1
+        let cursor_number = cursor
+        let derived_digits = ''
+
+        for (let i = order; i >= 0; i--)
+        {
+            const digit = Math.floor(cursor_number / (Math.pow(10, i)))
+            cursor_number %= Math.pow(10, i)
+            derived_digits += digit
+        }
+        
+        console.log('derived_digits :', derived_digits);
+        return derived_digits
+    }
 
     throw new Error('Unsupported strategy.')
 }

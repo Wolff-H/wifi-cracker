@@ -134,7 +134,7 @@
                         collapse-tags-tooltip
                     )
                         el-option(
-                            v-for="(wlan, index) of current_scanned_wlans"
+                            v-for="(wlan, index) of current_scanned_wlans_secured"
                             :key="index"
                             :label="wlan._SSID"
                             :value="wlan._SSID"
@@ -213,6 +213,10 @@ defineOptions({ name: 'view-tasks' })
 const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
 const current_scanned_wlans = ref<any[]>([])
+
+const current_scanned_wlans_secured = computed(() => {
+    return current_scanned_wlans.value.filter((ss) => ss.Authentication !== 'Open')
+})
 
 const dict_current_scanned_wlan = computed(() => {
     return Object.fromEntries(current_scanned_wlans.value.map(ss => [ss._SSID, ss])) as Record<string, WC.WlanSSInfoNormalized>
