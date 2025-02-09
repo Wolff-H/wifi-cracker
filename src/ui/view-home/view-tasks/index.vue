@@ -32,7 +32,7 @@
             .task-list
                 .task(
                     v-for="(task, index) of tasks_running_in_view"
-                    :key="task.ssid"
+                    :key="task.id"
                 )
                     .status(:title="JSON.stringify(task.setup, undefined, 4)")
                         IconRound(v-if="task.status === 'pending'" size="24px")

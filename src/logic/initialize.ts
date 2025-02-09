@@ -44,7 +44,11 @@ export default async function initialize()
         for (const key in app_state.state.tasks.uncompleted)
         {
             if (store_Tasks.uncompleted[key])
+            {
                 store_Tasks.uncompleted[key] = app_state.state.tasks.uncompleted[key]
+            }
+            
+            store_Tasks.completed = app_state.state.tasks.completed
         }
 
         if (store_Device.dict_wlan_cards[app_state.state.tasks.wlan_card_nav_at])
