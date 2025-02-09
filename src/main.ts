@@ -28,6 +28,8 @@ import "@/assets/stylesheets/colorset/define-css-variables.styl"
 import "@icon-park/vue-next/styles/index.css"
 import "@/assets/stylesheets/element-plus-customized/index.scss"
 
+import useTauriListeners from "./logic/useTauriListeners"
+
 // 设置 dayjs //
 dayjs.extend(dayjs_plugin_utc)
 dayjs.extend(dayjs_plugin_weekday)
@@ -82,3 +84,6 @@ app.config.globalProperties['store_Tasks'] = store_Tasks
 app
     .use(router)
     .mount('body')
+
+// 注册 tauri 后端事件监听 //
+useTauriListeners()

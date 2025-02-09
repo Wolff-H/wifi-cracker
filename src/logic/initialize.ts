@@ -36,5 +36,20 @@ export default async function initialize()
     // 初始化任务管理器 //
     crack_task_manager.initialize(store_Device.wlan_cards.map((card) => (card.Name)))
 
+    // 读取应用状态持久化数据，并最大可用赋给当前状态 //
+    await invoke('read_app_state_persistence').then((response) => {
+        console.log('response :', response);
+        const app_state = JSON.parse(response) as WC.AppStatePersistence
+
+        for (const key in app_state.state.tasks.uncompleted)
+        {
+            if (store_Tasks.uncompleted[key])
+                store_Tasks.uncompleted[key] = app_state.state.tasks.uncompleted[key]
+        }
+
+        if (store_Device.dict_wlan_cards[app_state.state.tasks.wlan_card_nav_at])
+            store_Tasks.wlan_card_nav_at = app_state.state.tasks.wlan_card_nav_at
+    })
+
     console.log('initialized')
 }
