@@ -285,13 +285,14 @@ class WlanCardCrackTaskManager
                 /**
                  * @TODO 优化：令网卡连接检查以一个固定间隔轮询，直到确定网卡已连接状态。（确定状态：{connected, disconnected}，不确定状态：{None, associating, authenticating}）
                  * 因为网卡在连接进行中时状态是 associating，（目前使用用户设置的链接间隔）连接间隔过短则可能错过连接，连接间隔过长则可能浪费时间。
+                 * 【实际上并不行，如果无线网卡不能立即连接上的话，网卡会一直持续一个很久的 associating 和 一个很久的 authenticating，直到 disconnected。】
                  */
                 const if_connected = await invoke ('check_wlan_connection', {
                     wlan_card: task.setup.device,
                     ssid: task.ssid,
                 })
                 resolve(if_connected)
-            }, 0)
+            }, task.setup.connection_interval * 1000)
         })
 
         /**
