@@ -1,12 +1,13 @@
 use tauri::ipc::InvokeError;
+use tokio::time::{interval, Duration};
 use crate::utils::run_command::run_command;
 
 #[tauri::command(rename_all = "snake_case")]
 // #[logcall::logcall]
-pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<bool, InvokeError>
+pub async fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<bool, InvokeError>
 {
-    let output = run_command("netsh wlan show interfaces")
-        .map_err(|e| InvokeError::from(e.to_string()))?;
+    // let output = run_command("netsh wlan show interfaces")
+    //     .map_err(|e| InvokeError::from(e.to_string()))?;
 
     // println!("{}", &output);
 
@@ -35,5 +36,28 @@ pub fn check_wlan_connection(wlan_card: String, ssid: String) -> Result<bool, In
     // Ok(state == Some("connected") && profile == Some(&ssid))
 
     // TODO 以下是一个临时方案，需要重写。 //
-    Ok((output.contains(&format!(": {}", wlan_card)) && output.contains(": connected")) && output.contains(&format!(": {}", ssid)))
+    // Ok((output.contains(&format!(": {}", wlan_card)) && output.contains(": connected")) && output.contains(&format!(": {}", ssid)))
+
+    let mut interval = interval(Duration::from_millis(200));
+    let connection_status: bool;
+
+    loop {
+        let output = run_command("netsh wlan show interfaces")
+            .map_err(|e| InvokeError::from(e.to_string()))?;
+    
+        if output.contains(&format!(": {}", wlan_card)) {
+            if output.contains(": connected") && output.contains(&format!(": {}", ssid)) {
+                connection_status = true;
+                break;
+            }
+            else if output.contains(": disconnected") {
+                connection_status = false;
+                break;
+            }
+        }
+
+        interval.tick().await;
+    }
+
+    Ok(connection_status)
 }

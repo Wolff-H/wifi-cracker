@@ -283,7 +283,7 @@ class WlanCardCrackTaskManager
         const checked_connection_status = await new Promise<boolean>((resolve) => {
             window.setTimeout(async () => {
                 /**
-                 * @TODO 优化：令网卡连接检查以一个固定间隔轮询，直到确定网卡已连接状态。（确定状态：{connected, disconnected}，不确定状态：{None, associating}）
+                 * @TODO 优化：令网卡连接检查以一个固定间隔轮询，直到确定网卡已连接状态。（确定状态：{connected, disconnected}，不确定状态：{None, associating, authenticating}）
                  * 因为网卡在连接进行中时状态是 associating，（目前使用用户设置的链接间隔）连接间隔过短则可能错过连接，连接间隔过长则可能浪费时间。
                  */
                 const if_connected = await invoke ('check_wlan_connection', {
@@ -291,7 +291,7 @@ class WlanCardCrackTaskManager
                     ssid: task.ssid,
                 })
                 resolve(if_connected)
-            }, task.setup.connection_interval * 1000)
+            }, 0)
         })
 
         /**
