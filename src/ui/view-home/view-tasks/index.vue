@@ -42,12 +42,19 @@
                             |{{ task.ssid }}
                         el-progress.progress-bar(
                             :percentage="task._progress.percentage"
+                            :color="menu_at === 'uncompleted' ? undefined : '#52c41a'"
                         )
                         .progress-info
                             .combinations-consumption(title="尝试的组合数")
                                 |{{ task._progress.percentage }} % ( {{ task._progress.combinations_consumption.join(' / ') }} )
-                            .estimated-time(title="估计剩余用时")
-                                |??:??:??
+                            template(v-if="menu_at === 'uncompleted'")
+                                .estimated-time(title="估计剩余用时")
+                                    |??:??:??
+                            template(v-else-if="menu_at === 'completed'")
+                                .password(title="密码")
+                                    |密码：
+                                    span
+                                        |{{ task.result.password }}
                         .log(:title="JSON.stringify(task.log, undefined, 4)")
                             |Log
                     .main-action
@@ -480,10 +487,13 @@ $root = '#view-tasks'
                             line-height 14px
                             color $black40
                             justify-content space-between
-                           .estimated-time
+                            .estimated-time
                                 //
-                           .combinations-consumption
+                            .combinations-consumption
                                 // 
+                            .password
+                                span
+                                    user-select text
                         >.log
                             display none
                             font-size 12px
