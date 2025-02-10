@@ -158,7 +158,7 @@
                .content
                     el-input-number(
                         v-model="form_task_setup.connection_interval"
-                        :min="0"
+                        :min="1"
                         :max="10"
                     )
             .section.max-retries
