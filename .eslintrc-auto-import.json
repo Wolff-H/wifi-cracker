@@ -22,6 +22,7 @@
     "computed": true,
     "createApp": true,
     "customRef": true,
+    "dayjs": true,
     "defineAsyncComponent": true,
     "defineComponent": true,
     "effectScope": true,
@@ -29,6 +30,7 @@
     "getCurrentScope": true,
     "h": true,
     "inject": true,
+    "invoke": true,
     "isProxy": true,
     "isReactive": true,
     "isReadonly": true,
@@ -62,6 +64,9 @@
     "shallowReadonly": true,
     "shallowRef": true,
     "store": true,
+    "store_Device": true,
+    "store_Scan": true,
+    "store_Tasks": true,
     "toRaw": true,
     "toRef": true,
     "toRefs": true,
@@ -81,12 +86,6 @@
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
-    "watchSyncEffect": true,
-    "invoke": true,
-    "store_device": true,
-    "store_Device": true,
-    "store_Scan": true,
-    "dayjs": true,
-    "store_Tasks": true
+    "watchSyncEffect": true
   }
 }

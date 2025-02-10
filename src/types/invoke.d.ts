@@ -13,6 +13,9 @@ declare namespace Commands
         rewrite_wlan_profile_password: [{ wlan_card: string, profile_name: string, password: string }, void]
         connect_wlan: [{ wlan_card: string, profile_name: string }, void]
         check_wlan_connection: [{ wlan_card: string, ssid: string }, boolean]
+        save_app_state: [{ content: string }, void]
+        read_app_state_persistence: [never, string]
+        exit_app: [never, void]
     }
 }
 

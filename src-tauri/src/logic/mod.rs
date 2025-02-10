@@ -11,3 +11,6 @@ pub mod delete_wlan_profile;
 pub mod rewrite_wlan_profile_password;
 pub mod connect_wlan;
 pub mod check_wlan_connection;
+pub mod save_app_state;
+pub mod exit_app;
+pub mod read_app_state_persistence;

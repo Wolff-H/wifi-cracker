@@ -32,7 +32,7 @@
             .task-list
                 .task(
                     v-for="(task, index) of tasks_running_in_view"
-                    :key="task.ssid"
+                    :key="task.id"
                 )
                     .status(:title="JSON.stringify(task.setup, undefined, 4)")
                         IconRound(v-if="task.status === 'pending'" size="24px")
@@ -42,12 +42,19 @@
                             |{{ task.ssid }}
                         el-progress.progress-bar(
                             :percentage="task._progress.percentage"
+                            :color="menu_at === 'uncompleted' ? undefined : '#52c41a'"
                         )
                         .progress-info
                             .combinations-consumption(title="尝试的组合数")
                                 |{{ task._progress.percentage }} % ( {{ task._progress.combinations_consumption.join(' / ') }} )
-                            .estimated-time(title="估计剩余用时")
-                                |??:??:??
+                            template(v-if="menu_at === 'uncompleted'")
+                                .estimated-time(title="估计剩余用时")
+                                    |??:??:??
+                            template(v-else-if="menu_at === 'completed'")
+                                .password(title="密码")
+                                    |密码：
+                                    span
+                                        |{{ task.result.password }}
                         .log(:title="JSON.stringify(task.log, undefined, 4)")
                             |Log
                     .main-action
@@ -134,7 +141,7 @@
                         collapse-tags-tooltip
                     )
                         el-option(
-                            v-for="(wlan, index) of current_scanned_wlans"
+                            v-for="(wlan, index) of current_scanned_wlans_secured"
                             :key="index"
                             :label="wlan._SSID"
                             :value="wlan._SSID"
@@ -151,7 +158,7 @@
                .content
                     el-input-number(
                         v-model="form_task_setup.connection_interval"
-                        :min="0"
+                        :min="1"
                         :max="10"
                     )
             .section.max-retries
@@ -213,6 +220,10 @@ defineOptions({ name: 'view-tasks' })
 const menu_at = ref<'uncompleted' | 'completed'>('uncompleted')
 const if_render_create_task_modal = ref(false)
 const current_scanned_wlans = ref<any[]>([])
+
+const current_scanned_wlans_secured = computed(() => {
+    return current_scanned_wlans.value.filter((ss) => ss.Authentication !== 'Open')
+})
 
 const dict_current_scanned_wlan = computed(() => {
     return Object.fromEntries(current_scanned_wlans.value.map(ss => [ss._SSID, ss])) as Record<string, WC.WlanSSInfoNormalized>
@@ -476,10 +487,13 @@ $root = '#view-tasks'
                             line-height 14px
                             color $black40
                             justify-content space-between
-                           .estimated-time
+                            .estimated-time
                                 //
-                           .combinations-consumption
+                            .combinations-consumption
                                 // 
+                            .password
+                                span
+                                    user-select text
                         >.log
                             display none
                             font-size 12px

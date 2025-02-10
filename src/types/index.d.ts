@@ -163,4 +163,13 @@ declare namespace WC
     //     queue: CrackTask[]
     // }
 
+    interface AppStatePersistence
+    {
+        ctime: number
+        state:
+        {
+            tasks: typeof import("@/store/Tasks/index").$state
+        }
+    }
+
 }

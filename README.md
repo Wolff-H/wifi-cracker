@@ -63,3 +63,4 @@ Tauri 编译所需的环境。
 - [Windows Wlan Commands API](https://learn.microsoft.com/zh-cn/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)#netsh-wlan-commands)
 - [Windows Wlan Profile](https://learn.microsoft.com/en-us/uwp/schemas/mobilebroadbandschema/wlan/element-wlanprofile)
 - [Top 200 Most Common Passwords](https://nordpass.com/most-common-passwords-list/)
+- 生成无线网络状态报告 `netsh wlan show wlanreport`
