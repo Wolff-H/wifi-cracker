@@ -18,7 +18,7 @@ const useStore = defineStore('/', {
     {
         passwordbook_list(): string[]
         {
-            return markRaw(this.passwordbook.replace(/\r/g, '').split('\n')) // 在 Windows 下必须要先移除所有回车符【就这玩意查了我一天时间，真实毒瘤 #(> _ <)】
+            return markRaw(this.passwordbook.replace(/\r/g, '').split('\n')).filter((line) => line !== '') // 在 Windows 下必须要先移除所有回车符【就这玩意查了我一天时间，真实毒瘤 #(> _ <)】
         },
     },
 })
