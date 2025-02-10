@@ -360,6 +360,8 @@ function deleteTask(task_index: number)
 
 function copyPassword(task_index: number)
 {
+    console.log(task_index);
+    
     // TODO
 }
 

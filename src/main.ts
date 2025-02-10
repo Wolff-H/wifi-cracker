@@ -49,7 +49,7 @@ dayjs.locale('zh-cn', {
 // 设置 app 实例 //
 const app = createApp(App)
 
-app.config.globalProperties['_'] = Lodash
+app.config.globalProperties['_'] = Lodash as any
 app.config.globalProperties['router'] = router
 app.config.globalProperties['route'] = route
 app.config.globalProperties['dayjs'] = dayjs

@@ -1,4 +1,4 @@
-export function getCrackStrategiesIterationsTotal(strategies: WC.CrackStrategy[], custom_strategies?: string[]): number
+export function getCrackStrategiesIterationsTotal(strategies: WC.CrackStrategy[]/*, custom_strategies?: string[]*/): number
 {
     let total = 0
 

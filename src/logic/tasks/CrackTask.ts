@@ -74,6 +74,7 @@ export default class CrackTask implements WC.CrackTask
  */
 function constructProgress(strategies: WC.CrackStrategy[], custom_strategies: string[])
 {
+    console.log('custom_strategies :', custom_strategies);
     const progress: WC.CrackTask["progress"] =
     {
         total: 0,
